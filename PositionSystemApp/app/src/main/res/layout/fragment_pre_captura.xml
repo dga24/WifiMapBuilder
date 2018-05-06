@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.garci.positionsystemapp.PreCaptura">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/contentMapa"
+            layout="@layout/mapa_pre_captura"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:maxHeight="250dp" />
+
+        <include
+            android:id="@+id/contentParam"
+            layout="@layout/param_pre_captura"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/contentMapa" />
+
+    </RelativeLayout>
+
+</FrameLayout>

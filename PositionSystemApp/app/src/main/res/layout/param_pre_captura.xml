@@ -1,0 +1,149 @@
+<android.support.constraint.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/fondo"
+android:layout_margin="5dp"
+android:padding="5dp">
+
+
+<TextView
+    android:id="@+id/titleParamPreCap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:theme="@style/MyTxtTitulo"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:text="Datos"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="40dp"
+    android:orientation="horizontal"
+    app:layout_constraintTop_toTopOf="parent">
+
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="1dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+    </android.support.constraint.ConstraintLayout>
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="6dp"
+        android:background="@android:color/black"
+        android:backgroundTint="@color/colorPrimary" />
+
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_weight="1"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textMuestras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/MyTxtVar"
+            android:layout_marginStart="8dp"
+            android:text="@string/param_muestras"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editMuestras"
+            style="@style/Param"
+            android:text="100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textMuestras" />
+
+        <TextView
+            android:id="@+id/textPeriodo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="115dp"
+            android:text="@string/param_periodo"
+            android:theme="@style/MyTxtVar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editPeriodo"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:inputType="textPersonName"
+            android:text="0.001"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textPeriodo" />
+
+        <TextView
+            android:id="@+id/textRepeticiones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/MyTxtVar"
+            android:text="@string/param_repeticiones"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editMuestras" />
+
+        <EditText
+            android:id="@+id/editRepeticiones"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:inputType="textPersonName"
+            android:text="3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textRepeticiones" />
+
+        <TextView
+            android:id="@+id/textTiempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="115dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/param_tiempo"
+            android:theme="@style/MyTxtVar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editPeriodo" />
+
+        <EditText
+            android:id="@+id/editTiempo"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="112dp"
+            android:inputType="textPersonName"
+            android:text="10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTiempo" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:elevation="2dp"
+            android:text="@string/param_start"
+            android:theme="@style/MyBtnAceptar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

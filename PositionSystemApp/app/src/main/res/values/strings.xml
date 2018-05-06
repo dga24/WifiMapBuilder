@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">PositionSystemApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_pre_captura_datos">PreCapturaDatos</string>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++++ -->
+    <string name="grabando">Grabando:</string>
+    <string name="param_muestras">Muestras:</string>
+    <string name="param_tiempo">Tiempo:</string>
+    <string name="param_repeticiones">Repeticiones:</string>
+    <string name="param_periodo">Periodo:</string>
+    <string name="param_start">Start</string>
+    <string name="param_cancelar">Cancelar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="reset">Reset</string>
+    <string name="param_aps">Puntos de acceso:</string>
+    <string name="param_posicion">Posición: (x,y,z,angulo)</string>
+    <string name="datos">Datos</string>
+    <string name="todos">Todos</string>
+    <string name="param_pre_cap">Datos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Home" />
+        <item
+            android:id="@+id/capturaDatos"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Capturar datos" />
+        <item
+            android:id="@+id/heatMap"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Heat Map" />
+        <item
+            android:id="@+id/gestorDatos"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Gestor de datos" />
+    </group>
+
+</menu>
