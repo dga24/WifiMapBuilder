@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,14 @@ public class PreCaptura extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    AbrirMapaDialog abrirMapa;
+
     EditText txtX;
     EditText txtY;
     EditText txtZ;
-    Spinner editAng;
+    EditText editAng;
     Button btnSelect;
+    ImageView imgMapaCaptura;
 
     EditText editMuestras;
     EditText editPeriodo;
@@ -59,8 +63,9 @@ public class PreCaptura extends Fragment {
         txtX = (EditText) view.findViewById(R.id.editX);
         txtY = (EditText) view.findViewById(R.id.editY);
         txtZ = (EditText) view.findViewById(R.id.editZ);
-        editAng = (Spinner) view.findViewById(R.id.editAng);
+        editAng = (EditText) view.findViewById(R.id.editAng);
         btnSelect = (Button) view.findViewById(R.id.btnSelect);
+        imgMapaCaptura = (ImageView) view.findViewById(R.id.imgMapaCaptura);
 
         editMuestras = (EditText) view.findViewById(R.id.editMuestras);
         editPeriodo = (EditText) view.findViewById(R.id.editPeriodo);
@@ -105,45 +110,15 @@ public class PreCaptura extends Fragment {
     }
 
     public void openMap(){
-        dispatchTakePictureIntent();
+        ((MainActivity)getActivity()).dispatchTakePictureIntent();
 
     }
-    final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView mImageView;
-    private void dispatchTakePictureIntent(){
-        System.out.print("\n\n\n\ncrearIntent");
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
-        }
-    }
 
-//    String mCurrentPhotoPath;
-//
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = image.getAbsolutePath();
-//        return image;
-//    }
+
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this
