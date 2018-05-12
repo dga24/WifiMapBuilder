@@ -13,16 +13,19 @@ public class Muestra {
     private int muestraid;
     private double valor;
     private int nummuestra;
+    private String bsid;
 
-    public Muestra(int muestraid, double valor, int nummuestra) {
+    public Muestra(int muestraid, double valor, int nummuestra, String bsid) {
         this.muestraid = muestraid;
         this.valor = valor;
         this.nummuestra = nummuestra;
+        this.bsid = bsid;
     }
 
-    public Muestra(double valor, int nummuestra) {
+    public Muestra(double valor, int nummuestra, String bsid) {
         this.valor = valor;
         this.nummuestra = nummuestra;
+        this.bsid = bsid;
     }
 
     public int getMuestraid() {

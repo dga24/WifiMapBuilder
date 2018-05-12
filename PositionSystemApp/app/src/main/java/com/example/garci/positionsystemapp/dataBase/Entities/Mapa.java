@@ -15,10 +15,10 @@ public class Mapa {
     private String nombre;
     private String edificio;
     private int planta;
-    private Image imgMapa;
+    private String imgMapa;
     private int coordenadaorigenid;
 
-    public Mapa(int mapaid, String nombre, String edificio, int planta, Image imgMapa, int coordenadaorigenid) {
+    public Mapa(int mapaid, String nombre, String edificio, int planta, String imgMapa, int coordenadaorigenid) {
         this.mapaid = mapaid;
         this.nombre = nombre;
         this.edificio = edificio;
@@ -27,7 +27,7 @@ public class Mapa {
         this.coordenadaorigenid = coordenadaorigenid;
     }
 
-    public Mapa(String nombre, String edificio, int planta, Image imgMapa, int coordenadaorigenid) {
+    public Mapa(String nombre, String edificio, int planta, String imgMapa, int coordenadaorigenid) {
         this.nombre = nombre;
         this.edificio = edificio;
         this.planta = planta;
@@ -67,11 +67,11 @@ public class Mapa {
         this.planta = planta;
     }
 
-    public Image getImgMapa() {
+    public String getImgMapa() {
         return imgMapa;
     }
 
-    public void setImgMapa(Image imgMapa) {
+    public void setImgMapa(String imgMapa) {
         this.imgMapa = imgMapa;
     }
 

@@ -18,20 +18,13 @@ public class Muestras {
     private int muestrasid;
     private int medidaid;
     private int repeticion;
-    private int bsid;
 
-    public Muestras(int muestrasid, int medidaid, int repeticion, int bsid) {
+    public Muestras(int muestrasid, int medidaid, int repeticion) {
         this.muestrasid = muestrasid;
         this.medidaid = medidaid;
         this.repeticion = repeticion;
-        this.bsid = bsid;
     }
 
-    public Muestras(int medidaid, int repeticion, int bsid) {
-        this.medidaid = medidaid;
-        this.repeticion = repeticion;
-        this.bsid = bsid;
-    }
 
     public int getMuestrasid() {
         return muestrasid;
@@ -57,12 +50,5 @@ public class Muestras {
         this.repeticion = repeticion;
     }
 
-    public int getBsid() {
-        return bsid;
-    }
-
-    public void setBsid(int bsid) {
-        this.bsid = bsid;
-    }
 }
 

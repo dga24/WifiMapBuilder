@@ -1,20 +1,14 @@
 package com.example.garci.positionsystemapp;
 
-import android.Manifest;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,29 +17,46 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
+
+import com.example.garci.positionsystemapp.dataBase.AppDatabase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PreCaptura.OnFragmentInteractionListener, HeatMap.OnFragmentInteractionListener, GestionChooser.OnFragmentInteractionListener {
 
-    public static int navItemIndex = 0;
+    Context context;
 
-    Button boton;
+
+    private Uri mImgUri;
+    private PreCaptura mPreCaptura;
+    private Captura mCaptura;
+    private GestionChooser mGestionChooser;
+    private GestionDatos mGestionDatos;
+    private HeatMap mHeatMap;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+//        context = getApplicationContext();
+//        AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
+//        Mapa map= new Mapa("aq","a",1,"imasdasd",1);
+//        db.mMapadao().createMapa(map);
+
+//        List<Mapa> mapas = db.mMapadao().getAllMapas();
 
 
 
@@ -102,18 +113,18 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
 
         if (id == R.id.capturaDatos) {
-            fragment = new PreCaptura();
+            fragment = mPreCaptura = new PreCaptura();
             fragmentTransaction=true;
 
         } else if (id == R.id.home) {
             Log.i("NavigationDrawer", "Entro en home");
 
         } else if (id == R.id.heatMap) {
-            fragment = new HeatMap();
+            fragment = mHeatMap= new HeatMap();
             fragmentTransaction=true;
 
         } else if (id == R.id.gestorDatos) {
-            fragment = new GestionChooser();
+            fragment = mGestionChooser = new GestionChooser();
             fragmentTransaction = true;
 
         }
@@ -135,20 +146,47 @@ public class MainActivity extends AppCompatActivity
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+//    void dispatchTakePictureIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
+//    }
+
+    static final int REQUEST_TAKE_PHOTO = 1;
+
     void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                System.out.print("Error creando archivo imagen");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.garci.positionsystemapp.fileprovider",
+                        photoFile);
+                mImgUri = photoURI;
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
         }
     }
 
 
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView im = (ImageView) findViewById(R.id.imgMapaCaptura);
-            im.setImageBitmap(imageBitmap);
+            if(mImgUri==null) return;
+            mPreCaptura.updateMap(mImgUri);
+            mImgUri=null;
         }
     }
 
@@ -168,6 +206,14 @@ public class MainActivity extends AppCompatActivity
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
 

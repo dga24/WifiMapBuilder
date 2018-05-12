@@ -8,21 +8,30 @@ public class Coordenada {
 
     @PrimaryKey(autoGenerate = true)
     int coordenadaid;
+    int mapaid;
     double x;
     double y;
     double z;
+    double pixelx;
+    double pixely;
 
-    public Coordenada(int coordenadaid, double x, double y, double z) {
+    public Coordenada(int coordenadaid, int mapaid, double x, double y, double z, double pixelx, double pixely) {
         this.coordenadaid = coordenadaid;
+        this.mapaid = mapaid;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.pixelx = pixelx;
+        this.pixely = pixely;
     }
 
-    public Coordenada(double x, double y, double z) {
+    public Coordenada(int mapaid, double x, double y, double z, double pixelx, double pixely) {
+        this.mapaid = mapaid;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.pixelx = pixelx;
+        this.pixely = pixely;
     }
 
     public int getCoordenadaid() {
@@ -56,4 +65,29 @@ public class Coordenada {
     public void setZ(double z) {
         this.z = z;
     }
+
+    public int getMapaid() {
+        return mapaid;
+    }
+
+    public void setMapaid(int mapaid) {
+        this.mapaid = mapaid;
+    }
+
+    public double getPixelx() {
+        return pixelx;
+    }
+
+    public void setPixelx(double pixelx) {
+        this.pixelx = pixelx;
+    }
+
+    public double getPixely() {
+        return pixely;
+    }
+
+    public void setPixely(double pixely) {
+        this.pixely = pixely;
+    }
+
 }

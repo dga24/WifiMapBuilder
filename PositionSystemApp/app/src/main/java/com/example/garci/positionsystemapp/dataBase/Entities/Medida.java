@@ -25,19 +25,17 @@ public class Medida {
     private int posicionid;
     private int angulo;
     private int mapaid;
-    private String bsid;
     private Date fechaInicio;
     private Date fechaFin;
     private double periodo;
     private int repeticiones;
     private double tiempo;
 
-    public Medida(int medidaid, int posicionid, int angulo, int mapaid, String bsid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
+    public Medida(int medidaid, int posicionid, int angulo, int mapaid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
         this.medidaid = medidaid;
         this.posicionid = posicionid;
         this.angulo = angulo;
         this.mapaid = mapaid;
-        this.bsid = bsid;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.periodo = periodo;
@@ -45,11 +43,10 @@ public class Medida {
         this.tiempo = tiempo;
     }
 
-    public Medida(int posicionid, int angulo, int mapaid, String bsid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
+    public Medida(int posicionid, int angulo, int mapaid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
         this.posicionid = posicionid;
         this.angulo = angulo;
         this.mapaid = mapaid;
-        this.bsid = bsid;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.periodo = periodo;
@@ -87,14 +84,6 @@ public class Medida {
 
     public void setMapaid(int mapaid) {
         this.mapaid = mapaid;
-    }
-
-    public String getBsid() {
-        return bsid;
-    }
-
-    public void setBsid(String bsid) {
-        this.bsid = bsid;
     }
 
     public Date getFechaInicio() {

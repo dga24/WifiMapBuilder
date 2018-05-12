@@ -114,6 +114,10 @@ public class PreCaptura extends Fragment {
 
     }
 
+    public void updateMap(Uri uri){
+        imgMapaCaptura.setImageURI(uri);
+    }
+
 
 
 
