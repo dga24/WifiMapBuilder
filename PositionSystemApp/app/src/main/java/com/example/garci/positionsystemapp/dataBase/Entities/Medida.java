@@ -13,10 +13,7 @@ import java.sql.Date;
         @ForeignKey(entity = Coordenada.class,
             parentColumns = "coordenadaid",
             childColumns = "posicionid"
-        ),
-        @ForeignKey(entity = EstacionBase.class,
-            parentColumns = "bsid",
-            childColumns = "bsid")
+        )
         })
 public class Medida {
 
@@ -25,25 +22,14 @@ public class Medida {
     private int posicionid;
     private int angulo;
     private int mapaid;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private String fechaInicio;
+    private String fechaFin;
     private double periodo;
     private int repeticiones;
     private double tiempo;
 
-    public Medida(int medidaid, int posicionid, int angulo, int mapaid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
-        this.medidaid = medidaid;
-        this.posicionid = posicionid;
-        this.angulo = angulo;
-        this.mapaid = mapaid;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.periodo = periodo;
-        this.repeticiones = repeticiones;
-        this.tiempo = tiempo;
-    }
 
-    public Medida(int posicionid, int angulo, int mapaid, Date fechaInicio, Date fechaFin, double periodo, int repeticiones, double tiempo) {
+    public Medida(int posicionid, int angulo, int mapaid, String fechaInicio, String fechaFin, double periodo, int repeticiones, double tiempo) {
         this.posicionid = posicionid;
         this.angulo = angulo;
         this.mapaid = mapaid;
@@ -86,19 +72,19 @@ public class Medida {
         this.mapaid = mapaid;
     }
 
-    public Date getFechaInicio() {
+    public String getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public String getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
     }
 

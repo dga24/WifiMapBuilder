@@ -1,6 +1,8 @@
 package com.example.garci.positionsystemapp.model;
 
-public class EstacionBase {
+import android.arch.lifecycle.ViewModel;
+
+public class EstacionBaseModel{
 
     private String bsid;
     private String ssid;
@@ -8,7 +10,7 @@ public class EstacionBase {
     private String tipo;
 
 
-    public EstacionBase(String bsid, String ssid, String mac, String tipo) {
+    public EstacionBaseModel(String bsid, String ssid, String mac, String tipo) {
         this.bsid = bsid;
         this.ssid = ssid;
         this.mac = mac;

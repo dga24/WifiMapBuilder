@@ -2,21 +2,22 @@ package com.example.garci.positionsystemapp.model;
 
 import android.media.Image;
 
-public class Mapa {
+public class MapaModel {
 
     private int mapaid;
     private String nombre;
     private String edificio;
     private int planta;
     private Image imgMapa;
+    private Coordenada coordenadaOrigen;
 
-
-    public Mapa(int mapaid, String nombre, String edificio, int planta, Image imgMapa) {
+    public MapaModel(int mapaid, String nombre, String edificio, int planta, Image imgMapa, Coordenada coordenadaOrigen) {
         this.mapaid = mapaid;
         this.nombre = nombre;
         this.edificio = edificio;
         this.planta = planta;
         this.imgMapa = imgMapa;
+        this.coordenadaOrigen = coordenadaOrigen;
     }
 
     public int getMapaid() {
@@ -57,5 +58,13 @@ public class Mapa {
 
     public void setImgMapa(Image imgMapa) {
         this.imgMapa = imgMapa;
+    }
+
+    public Coordenada getCoordenadaOrigen() {
+        return coordenadaOrigen;
+    }
+
+    public void setCoordenadaOrigen(Coordenada coordenadaOrigen) {
+        this.coordenadaOrigen = coordenadaOrigen;
     }
 }

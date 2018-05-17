@@ -4,9 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.garci.positionsystemapp.model.Señal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,6 +23,10 @@ import android.view.ViewGroup;
  * to handle interaction events.
  */
 public class HeatMap extends Fragment {
+
+    private List<Señal> signals;
+    private RecyclerView recyclerListaSignals;
+    private SeñalAdapter adaptador;
 
     private OnFragmentInteractionListener mListener;
 
@@ -28,7 +39,27 @@ public class HeatMap extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_heatmap, container, false);
+        View view = inflater.inflate(R.layout.fragment_heatmap, container, false);
+
+        signals = new ArrayList<>();
+        recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvLista);
+        recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
+        data();
+        inicializarAdaptador();
+        return view;
+    }
+
+    public void data(){
+        signals.add(new Señal("ssid1","aa:ff:ff:ff",5,3,1));
+        signals.add(new Señal("ssid2","bb:ff:ff:ff",5,3,1));
+        signals.add(new Señal("ssid3","bb:ff:ff:ff",5,3,1));
+        signals.add(new Señal("ssid4","bb:ff:ff:ff",5,3,1));
+
+    }
+
+    public void inicializarAdaptador(){
+        adaptador = new SeñalAdapter(signals);
+        recyclerListaSignals.setAdapter(adaptador);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

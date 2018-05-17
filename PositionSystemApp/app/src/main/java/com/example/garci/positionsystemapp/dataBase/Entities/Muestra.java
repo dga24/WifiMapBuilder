@@ -4,23 +4,22 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(entity = Muestras.class,
+@Entity(foreignKeys ={ @ForeignKey(entity = Muestras.class,
             parentColumns = "muestrasid",
-            childColumns = "muestrasid"))
+            childColumns = "muestrasid"),
+            @ForeignKey(entity = EstacionBase.class,
+            parentColumns = "bsid",
+            childColumns = "bsid")
+        })
+
 public class Muestra {
 
     @PrimaryKey(autoGenerate = true)
-    private int muestraid;
+    private int muestrasid;
     private double valor;
     private int nummuestra;
     private String bsid;
 
-    public Muestra(int muestraid, double valor, int nummuestra, String bsid) {
-        this.muestraid = muestraid;
-        this.valor = valor;
-        this.nummuestra = nummuestra;
-        this.bsid = bsid;
-    }
 
     public Muestra(double valor, int nummuestra, String bsid) {
         this.valor = valor;
@@ -28,12 +27,12 @@ public class Muestra {
         this.bsid = bsid;
     }
 
-    public int getMuestraid() {
-        return muestraid;
+    public int getMuestrasid() {
+        return muestrasid;
     }
 
-    public void setMuestraid(int muestraid) {
-        this.muestraid = muestraid;
+    public void setMuestrasid(int muestrasid) {
+        this.muestrasid = muestrasid;
     }
 
     public double getValor() {
@@ -51,4 +50,8 @@ public class Muestra {
     public void setNummuestra(int nummuestra) {
         this.nummuestra = nummuestra;
     }
+
+    public String getBsid() { return bsid; }
+
+    public void setBsid(String bsid) { this.bsid = bsid; }
 }

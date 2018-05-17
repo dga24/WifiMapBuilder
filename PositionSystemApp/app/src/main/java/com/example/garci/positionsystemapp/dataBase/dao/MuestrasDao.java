@@ -11,5 +11,5 @@ import java.util.List;
 public interface MuestrasDao {
 
     @Query("SELECT * FROM muestras WHERE medidaid =:medidaid")
-    public List<Muestras> getMuestrasMedida(int medidaid);
+    List<Muestras> getMuestrasMedida(int medidaid);
 }

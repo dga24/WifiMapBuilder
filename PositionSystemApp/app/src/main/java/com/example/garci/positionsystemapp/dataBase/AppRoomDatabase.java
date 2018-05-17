@@ -24,9 +24,9 @@ import com.example.garci.positionsystemapp.dataBase.dao.coordenadaDao;
         Medida.class,
         Muestra.class,
         Muestras.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
+public abstract class AppRoomDatabase extends RoomDatabase {
 
-    private static AppDatabase INSTANCE;
+    private static AppRoomDatabase INSTANCE;
 
     public abstract coordenadaDao coordenadaDao();
     public abstract EstacionBaseDao estacionBaseDao();
@@ -36,17 +36,15 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract MuestrasDao muestrasDao();
 
 
-    public static AppDatabase getAppDatabase(Context context) {
+    public static AppRoomDatabase getAppDatabase(final Context context) {
         if (INSTANCE == null) {
-                if(INSTANCE == null){
-                    //Create database here
+            synchronized (AppRoomDatabase.class) {
+                if (INSTANCE == null) {
                     INSTANCE =
-                            Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "appdatabase")
-                                    // allow queries on the main thread.
-                                    // Don't do this on a real app! See PersistenceBasicSample for an example.
-                                    .allowMainThreadQueries()
+                            Room.databaseBuilder(context.getApplicationContext(), AppRoomDatabase.class, "appdatabase")
                                     .build();
                 }
+            }
 
         }
         return INSTANCE;

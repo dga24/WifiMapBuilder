@@ -4,14 +4,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(foreignKeys = {@ForeignKey(entity = Medida.class,
+@Entity(foreignKeys = @ForeignKey(entity = Medida.class,
                 parentColumns = "medidaid",
-                childColumns = "medidaid"
-        ),
-        @ForeignKey(entity = EstacionBase.class,
-                parentColumns = "bsid",
-                childColumns = "bsid"
-        )})
+                childColumns = "medidaid" ))
 public class Muestras {
 
     @PrimaryKey(autoGenerate = true)

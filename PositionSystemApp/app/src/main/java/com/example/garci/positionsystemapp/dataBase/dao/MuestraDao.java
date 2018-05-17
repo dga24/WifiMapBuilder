@@ -11,6 +11,6 @@ import java.util.List;
 @Dao
 public interface MuestraDao {
 
-    @Query("SELECT * FROM muestra WHERE muestraid =:muestrasid ")
-    public List<Muestra> getListaMuestras(int muestrasid);
+    @Query("SELECT * FROM muestra WHERE muestrasid =:muestrasid ")
+    List<Muestra> getListaMuestras(int muestrasid);
 }

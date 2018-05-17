@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.example.garci.positionsystemapp.model.Señal;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -46,6 +48,8 @@ public class PreCaptura extends Fragment {
     EditText editTiempo;
     Button btnStart;
     ImageButton refreshMap;
+
+
 
     public PreCaptura() {
         // Required empty public constructor
@@ -78,9 +82,18 @@ public class PreCaptura extends Fragment {
         refreshMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMap();
+                FragmentManager fm = getFragmentManager();
+                CargarMapaFragment cargarMapaFragment = new CargarMapaFragment ();
+                cargarMapaFragment.show(fm, "Sample Fragment");
             }
         });
+
+//        refreshMap.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openMap();
+//            }
+//        });
 
         return  view;
     }
@@ -117,23 +130,6 @@ public class PreCaptura extends Fragment {
     public void updateMap(Uri uri){
         imgMapaCaptura.setImageURI(uri);
     }
-
-
-
-
-
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

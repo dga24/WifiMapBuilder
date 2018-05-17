@@ -15,15 +15,6 @@ public class Coordenada {
     double pixelx;
     double pixely;
 
-    public Coordenada(int coordenadaid, int mapaid, double x, double y, double z, double pixelx, double pixely) {
-        this.coordenadaid = coordenadaid;
-        this.mapaid = mapaid;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.pixelx = pixelx;
-        this.pixely = pixely;
-    }
 
     public Coordenada(int mapaid, double x, double y, double z, double pixelx, double pixely) {
         this.mapaid = mapaid;

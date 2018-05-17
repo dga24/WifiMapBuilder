@@ -15,11 +15,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.example.garci.positionsystemapp.dataBase.AppDatabase;
-import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,27 +46,13 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-//        context = getApplicationContext();
-//        AppDatabase db = AppDatabase.getAppDatabase(getApplicationContext());
-//        Mapa map= new Mapa("aq","a",1,"imasdasd",1);
-//        db.mMapadao().createMapa(map);
-
-//        List<Mapa> mapas = db.mMapadao().getAllMapas();
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -117,7 +104,8 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction=true;
 
         } else if (id == R.id.home) {
-            Log.i("NavigationDrawer", "Entro en home");
+            fragment = mPreCaptura = new PreCaptura();
+            fragmentTransaction=true;
 
         } else if (id == R.id.heatMap) {
             fragment = mHeatMap= new HeatMap();

@@ -7,17 +7,10 @@ import android.arch.persistence.room.PrimaryKey;
 public class EstacionBase {
 
     @PrimaryKey(autoGenerate = true)
-    private String bsid;
+    private int bsid;
     private String ssid;
     private String mac;
     private String tipo;
-
-    public EstacionBase(String bsid, String ssid, String mac, String tipo) {
-        this.bsid = bsid;
-        this.ssid = ssid;
-        this.mac = mac;
-        this.tipo = tipo;
-    }
 
     public EstacionBase(String ssid, String mac, String tipo) {
         this.ssid = ssid;
@@ -25,11 +18,11 @@ public class EstacionBase {
         this.tipo = tipo;
     }
 
-    public String getBsid() {
+    public int getBsid() {
         return bsid;
     }
 
-    public void setBsid(String bsid) {
+    public void setBsid(int bsid) {
         this.bsid = bsid;
     }
 

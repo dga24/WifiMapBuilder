@@ -11,13 +11,13 @@ import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
 public interface EstacionBaseDao {
 
     @Insert
-    public int createEstacionBase(EstacionBase estacionBase);
+    long createEstacionBase(EstacionBase estacionBase);
 
     @Query("SELECT * FROM estacionbase WHERE bsid = :bsid")
-    public EstacionBase getEstacionBase(int bsid);
+    EstacionBase getEstacionBase(int bsid);
 
     @Query("SELECT * FROM estacionbase WHERE mac = :mac")
-    public EstacionBase getEstacionBaseByMac(String mac);
+    EstacionBase getEstacionBaseByMac(String mac);
 
 
 }

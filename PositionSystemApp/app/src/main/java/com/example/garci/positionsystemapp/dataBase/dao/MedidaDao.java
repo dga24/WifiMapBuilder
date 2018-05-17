@@ -13,8 +13,21 @@ import java.util.List;
 public interface MedidaDao {
 
     @Insert
-    public int createMedida(Medida medida);
+    void createMedida(Medida medida);
+
 
     @Query("SELECT * FROM medida WHERE mapaid =:mapaid")
-    public List<Medida> getMedidasMapa(int mapaid);
+    Medida getMedidaByMapaId(int mapaid);
+
+    @Query("SELECT * FROM medida WHERE medidaid =:medidaid")
+    Medida getMedidaById(int medidaid);
+
+
+    @Query("SELECT * FROM medida WHERE medidaid IN (:medidasids)")
+    List<Medida> getMedidasByIds(List<Integer> medidasids);
+
+    @Query("SELECT * FROM medida WHERE mapaid =:mapaid")
+    List<Medida> getMedidasMapa(int mapaid);
+
+
 }

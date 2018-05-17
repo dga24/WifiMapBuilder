@@ -7,7 +7,7 @@ import android.media.Image;
 
 @Entity(foreignKeys = @ForeignKey(entity = Coordenada.class,
                         parentColumns = "coordenadaid",
-                        childColumns = "coordenadaorigenid"))
+                        childColumns = "coordenadaid"))
 public class Mapa {
 
     @PrimaryKey(autoGenerate = true)
@@ -16,23 +16,14 @@ public class Mapa {
     private String edificio;
     private int planta;
     private String imgMapa;
-    private int coordenadaorigenid;
+    private int coordenadaid;
 
-    public Mapa(int mapaid, String nombre, String edificio, int planta, String imgMapa, int coordenadaorigenid) {
-        this.mapaid = mapaid;
+    public Mapa(String nombre, String edificio, int planta, String imgMapa, int coordenadaid) {
         this.nombre = nombre;
         this.edificio = edificio;
         this.planta = planta;
         this.imgMapa = imgMapa;
-        this.coordenadaorigenid = coordenadaorigenid;
-    }
-
-    public Mapa(String nombre, String edificio, int planta, String imgMapa, int coordenadaorigenid) {
-        this.nombre = nombre;
-        this.edificio = edificio;
-        this.planta = planta;
-        this.imgMapa = imgMapa;
-        this.coordenadaorigenid = coordenadaorigenid;
+        this.coordenadaid = coordenadaid;
     }
 
     public int getMapaid() {
@@ -75,11 +66,11 @@ public class Mapa {
         this.imgMapa = imgMapa;
     }
 
-    public int getCoordenadaorigenid() {
-        return coordenadaorigenid;
+    public int getCoordenadaid() {
+        return coordenadaid;
     }
 
-    public void setCoordenadaorigenid(int coordenadaorigenid) {
-        this.coordenadaorigenid = coordenadaorigenid;
+    public void setCoordenadaid(int coordenadaid) {
+        this.coordenadaid = coordenadaid;
     }
 }

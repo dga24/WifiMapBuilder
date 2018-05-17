@@ -10,11 +10,11 @@ import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 public interface coordenadaDao {
 
     @Insert
-    public int insertCoordenada(Coordenada coordenana);
+    long insertCoordenada(Coordenada coordenana);
 
     @Query("DELETE FROM coordenada WHERE coordenadaid = :coordenadaid")
-    public int deleteCoordenadaById(int coordenadaid);
+    int deleteCoordenadaById(int coordenadaid);
 
     @Query("SELECT * FROM coordenada WHERE coordenadaid = :coordenadaid")
-    public Coordenada getCoordenada(int coordenadaid);
+    Coordenada getCoordenada(int coordenadaid);
 }
