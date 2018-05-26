@@ -19,6 +19,9 @@ import android.view.MenuItem;
 
 
 import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
+import com.example.garci.positionsystemapp.dataBase.DatabaseInitializer;
+import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
@@ -29,10 +32,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Integer.valueOf;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PreCaptura.OnFragmentInteractionListener, HeatMap.OnFragmentInteractionListener, GestionChooser.OnFragmentInteractionListener {
 
     Context context;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    String mCurrentPhotoPath;
 
 
     private Uri mImgUri;
@@ -59,7 +68,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this));
+        db = AppRoomDatabase.getAppDatabase(this);
 
 
     }
@@ -139,15 +149,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-//    void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
+    //Open Camera
 
     void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -173,18 +176,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
+    //receive camera result
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if(mImgUri==null) return;
-            mPreCaptura.updateMap(mImgUri);
+            NuevoMapaDialogFragment nuevoMapaDialogFragment = (NuevoMapaDialogFragment) getSupportFragmentManager().findFragmentById(R.id.nuevoMapa);
+            nuevoMapaDialogFragment.captureRealized(mImgUri);
+            //mPreCaptura.updateMap(mImgUri);
             mImgUri=null;
         }
     }
-
-    String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -196,7 +198,6 @@ public class MainActivity extends AppCompatActivity
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
@@ -210,11 +211,9 @@ public class MainActivity extends AppCompatActivity
         this.sendBroadcast(mediaScanIntent);
     }
 
-
-    private List<Medida> getMedidasByMapaId(int mapaid){
-        return db.medidaDao().getMedidasByMapaId(mapaid);
+    public void createMapa(String nombre, String edificio, String planta, Uri img){
+        Mapa mapa = new Mapa(nombre,edificio, Integer.parseInt(planta),img.getPath(),-1);
+        System.out.print("datosrecibidos");
+        db.mapadao().createMapa(mapa);
     }
-
-
-
 }

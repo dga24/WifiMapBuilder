@@ -27,9 +27,10 @@ public class Medida {
     private double periodo;
     private int repeticiones;
     private double tiempo;
+    private int numMuestras;
 
 
-    public Medida(int posicionid, int angulo, int mapaid, String fechaInicio, String fechaFin, double periodo, int repeticiones, double tiempo) {
+    public Medida(int posicionid, int angulo, int mapaid, String fechaInicio, String fechaFin, double periodo, int repeticiones, double tiempo, int numMuestras) {
         this.posicionid = posicionid;
         this.angulo = angulo;
         this.mapaid = mapaid;
@@ -38,6 +39,7 @@ public class Medida {
         this.periodo = periodo;
         this.repeticiones = repeticiones;
         this.tiempo = tiempo;
+        this.numMuestras = numMuestras;
     }
 
     public int getMedidaid() {
@@ -111,4 +113,8 @@ public class Medida {
     public void setTiempo(double tiempo) {
         this.tiempo = tiempo;
     }
+
+    public int getNumMuestras() { return numMuestras; }
+
+    public void setNumMuestras(int numMuestras) { this.numMuestras = numMuestras; }
 }

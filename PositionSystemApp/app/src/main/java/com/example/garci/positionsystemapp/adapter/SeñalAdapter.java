@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SeñalAdapter extends RecyclerView.Adapter<SeñalAdapter.SeñalViewHolder> {
 
-    private List<BSSignalStatistics> signals;
-    public SeñalAdapter(List<BSSignalStatistics> signals){
+    private List<APSignalStatistics> signals;
+    public SeñalAdapter(List<APSignalStatistics> signals){
         this.signals=signals;
     }
 

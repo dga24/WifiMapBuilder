@@ -13,6 +13,9 @@ public interface EstacionBaseDao {
     @Insert
     long createEstacionBase(EstacionBase estacionBase);
 
+    @Query("SELECT * FROM estacionbase")
+    EstacionBase getAllEstacionBase();
+
     @Query("SELECT * FROM estacionbase WHERE bsid = :bsid")
     EstacionBase getEstacionBase(int bsid);
 

@@ -75,8 +75,8 @@ public class PreCaptura extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
-                CargarMapaFragment cargarMapaFragment = new CargarMapaFragment();
-                cargarMapaFragment.show(fm, "Sample Fragment");
+                CargarMapaDialogFragment cargarMapaDialogFragment = new CargarMapaDialogFragment();
+                cargarMapaDialogFragment.show(fm, "Sample Fragment");
             }
         });
 
