@@ -4,25 +4,28 @@
     android:layout_height="match_parent"
     tools:context="com.example.garci.positionsystemapp.HeatMap">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2">
 
     <include
         android:id="@+id/contentMapa"
         layout="@layout/mapa_heatmap"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:maxHeight="250dp" />
+        android:layout_weight="1"
+        android:layout_alignParentTop="true"/>
 
     <include
         android:id="@+id/contentParam"
         layout="@layout/param_heatmap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/contentMapa" />
+        android:layout_below="@id/contentMapa"
+        android:layout_weight="1"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </FrameLayout>

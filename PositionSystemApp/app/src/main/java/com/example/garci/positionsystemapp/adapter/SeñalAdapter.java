@@ -1,4 +1,4 @@
-package com.example.garci.positionsystemapp;
+package com.example.garci.positionsystemapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,14 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.garci.positionsystemapp.model.Señal;
+import com.example.garci.positionsystemapp.R;
+import com.example.garci.positionsystemapp.model.APSignalStatistics;
+import com.example.garci.positionsystemapp.model.BSSignalStatistics;
 
 import java.util.List;
 
 public class SeñalAdapter extends RecyclerView.Adapter<SeñalAdapter.SeñalViewHolder> {
 
-    private List<Señal> signals;
-    public SeñalAdapter(List<Señal> signals){
+    private List<BSSignalStatistics> signals;
+    public SeñalAdapter(List<BSSignalStatistics> signals){
         this.signals=signals;
     }
 
@@ -27,12 +29,12 @@ public class SeñalAdapter extends RecyclerView.Adapter<SeñalAdapter.SeñalView
     @Override
     public void onBindViewHolder(SeñalViewHolder holder, int position) {
 
-        Señal señal = signals.get(position);
-        holder.tvSsid.setText(señal.getSsid());
-        holder.tvMac.setText(señal.getMac());
-        holder.tvMedia.setText(String.valueOf(señal.getMedia()));
+        BSSignalStatistics señal = signals.get(position);
+        holder.tvSsid.setText(señal.getName());
+        holder.tvMac.setText(señal.getAddress());
+        holder.tvMedia.setText(String.valueOf(señal.getMean()));
         holder.tvVar.setText(String.valueOf(señal.getVar()));
-        holder.tvCalidad.setText(String.valueOf(señal.getCalidad()));
+        holder.tvCalidad.setText(String.valueOf(señal.getQuality()));
 
     }
 

@@ -1,11 +1,8 @@
 package com.example.garci.positionsystemapp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -15,11 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
-
-import com.example.garci.positionsystemapp.model.Señal;
-
-import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -83,7 +75,7 @@ public class PreCaptura extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
-                CargarMapaFragment cargarMapaFragment = new CargarMapaFragment ();
+                CargarMapaFragment cargarMapaFragment = new CargarMapaFragment();
                 cargarMapaFragment.show(fm, "Sample Fragment");
             }
         });

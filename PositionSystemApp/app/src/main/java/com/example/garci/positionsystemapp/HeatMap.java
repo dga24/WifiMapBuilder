@@ -10,7 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.garci.positionsystemapp.model.Señal;
+import com.example.garci.positionsystemapp.adapter.SeñalAdapter;
+import com.example.garci.positionsystemapp.model.APSignalStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class HeatMap extends Fragment {
 
-    private List<Señal> signals;
+    private List<APSignalStatistics> signals;
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
 
@@ -50,14 +51,17 @@ public class HeatMap extends Fragment {
     }
 
     public void data(){
-        signals.add(new Señal("ssid1","aa:ff:ff:ff",5,3,1));
-        signals.add(new Señal("ssid2","bb:ff:ff:ff",5,3,1));
-        signals.add(new Señal("ssid3","bb:ff:ff:ff",5,3,1));
-        signals.add(new Señal("ssid4","bb:ff:ff:ff",5,3,1));
+        signals.add(new APSignalStatistics("ssid1","aa:ff:ff:ff",5,3,1));
+        signals.add(new APSignalStatistics("ssid2","bb:ff:ff:ff",5,3,1));
+        signals.add(new APSignalStatistics("ssid3","bb:ff:ff:ff",5,3,1));
+        signals.add(new APSignalStatistics("ssid4","bb:ff:ff:ff",5,3,1));
 
     }
 
+
+
     public void inicializarAdaptador(){
+
         adaptador = new SeñalAdapter(signals);
         recyclerListaSignals.setAdapter(adaptador);
     }

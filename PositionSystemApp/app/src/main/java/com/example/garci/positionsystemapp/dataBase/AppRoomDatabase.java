@@ -30,7 +30,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
     public abstract coordenadaDao coordenadaDao();
     public abstract EstacionBaseDao estacionBaseDao();
-    public abstract MapaDao mMapadao();
+    public abstract MapaDao mapadao();
     public abstract MedidaDao medidaDao();
     public abstract MuestraDao muestraDao();
     public abstract MuestrasDao muestrasDao();
@@ -53,4 +53,5 @@ public abstract class AppRoomDatabase extends RoomDatabase {
     public static void destroyInstance() {
         INSTANCE = null;
     }
+
 }

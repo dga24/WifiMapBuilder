@@ -8,19 +8,20 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
+
+import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
+import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
+import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     private GestionChooser mGestionChooser;
     private GestionDatos mGestionDatos;
     private HeatMap mHeatMap;
+    private AppRoomDatabase db;
+
 
 
     @Override
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
 
     }
 
@@ -202,6 +208,11 @@ public class MainActivity extends AppCompatActivity
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
+    }
+
+
+    private List<Medida> getMedidasByMapaId(int mapaid){
+        return db.medidaDao().getMedidasByMapaId(mapaid);
     }
 
 

@@ -13,4 +13,5 @@ public interface MuestraDao {
 
     @Query("SELECT * FROM muestra WHERE muestrasid =:muestrasid ")
     List<Muestra> getListaMuestras(int muestrasid);
+
 }
