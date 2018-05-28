@@ -7,6 +7,8 @@ import android.arch.persistence.room.Query;
 
 import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
 
+import java.util.List;
+
 @Dao
 public interface EstacionBaseDao {
 
@@ -14,7 +16,7 @@ public interface EstacionBaseDao {
     long createEstacionBase(EstacionBase estacionBase);
 
     @Query("SELECT * FROM estacionbase")
-    EstacionBase getAllEstacionBase();
+    List<EstacionBase> getAllEstacionBase();
 
     @Query("SELECT * FROM estacionbase WHERE bsid = :bsid")
     EstacionBase getEstacionBase(int bsid);

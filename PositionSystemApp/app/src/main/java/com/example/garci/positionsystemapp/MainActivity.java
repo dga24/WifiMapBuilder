@@ -1,10 +1,15 @@
 package com.example.garci.positionsystemapp;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
@@ -14,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -67,9 +73,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        permissionRequest();
+        this.context = this;
+        scanWifi();
 
-        DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this));
-        db = AppRoomDatabase.getAppDatabase(this);
+
+
+        DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this),this);
+        Log.d("fin:    ","ya ne mainactivity.....");
+        //db = AppRoomDatabase.getAppDatabase(this);
+        //System.out.print(db.estacionBaseDao().getEstacionBase(1).getTipo().toString());
+
 
 
     }
@@ -215,5 +229,30 @@ public class MainActivity extends AppCompatActivity
         Mapa mapa = new Mapa(nombre,edificio, Integer.parseInt(planta),img.getPath(),-1);
         System.out.print("datosrecibidos");
         db.mapadao().createMapa(mapa);
+    }
+
+    public void permissionRequest(){
+        String[] PERMS_INITIAL={
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+
+
+        };
+        ActivityCompat.requestPermissions(this, PERMS_INITIAL, 127);
+    }
+
+    public void scanWifi(){
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        // Level of a Scan Result
+        List<ScanResult> wifiList = wifiManager.getScanResults();
+        long timestamp = 0;
+        for (ScanResult scanResult : wifiList) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                timestamp = scanResult.timestamp;
+            }
+            Log.d("wifimanager:    ","MAC: "+ scanResult.BSSID+"  SSID: " + scanResult.SSID+"  POTENCIA[dBm]: "+scanResult.level+ "Timestamp: " + String.valueOf(timestamp));
+        }
     }
 }

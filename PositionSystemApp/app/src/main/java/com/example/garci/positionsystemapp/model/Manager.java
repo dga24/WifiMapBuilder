@@ -1,8 +1,12 @@
 package com.example.garci.positionsystemapp.model;
 
+import android.util.Log;
+
 import com.example.garci.positionsystemapp.Utils;
 import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
@@ -13,7 +17,6 @@ import java.util.List;
 
 public class Manager {
 
-    AppRoomDatabase db;
     Utils utils;
     QualityCalculatorByRSSThreshold qualityCalculatorByRSSThreshold;
 
@@ -25,7 +28,7 @@ public class Manager {
     // 4. Para cada lista de muestras generar un BSSignalStatistics a partir del tipo
     // 5. Incluir el BSSignalStatics en la lista de salida.
 
-    public List<BSSignalStatistics> getMuestrasByPosition(int medidaID, QualityCalculator qualityCalculator) {
+    public List<BSSignalStatistics> getMuestrasByPosition(int medidaID, QualityCalculator qualityCalculator,AppRoomDatabase db) {
         Medida medida = db.medidaDao().getMedidaById(medidaID);
         int numMuestras = medida.getNumMuestras();
 
@@ -68,6 +71,27 @@ public class Manager {
             }
         }
         return bsSignalStatistics;
+    }
+
+    public long createMap(Mapa mapa, Posicion origen,AppRoomDatabase db){
+        mapa.setCoordenadaid(-1);
+        long mapaid = db.mapadao().createMapa(mapa);
+        Log.d("DB", "Mapa creado");
+        Coordenada coor = null;
+        coor.setMapaid((int) mapaid);
+        coor.setX(origen.getX());
+        coor.setY(origen.getY());
+        coor.setZ(origen.getZ());
+        coor.setPixelx(origen.getPixelX());
+        coor.setPixely(origen.getPixelY());
+        long coorid = db.coordenadaDao().insertCoordenada(coor);
+        db.mapadao().updateOrigenId((int)mapaid,(int) coorid);
+        return mapaid;
+    }
+
+    public long createBS(EstacionBase bs,AppRoomDatabase db){
+        long id = db.estacionBaseDao().createEstacionBase(bs);
+        return id;
     }
 
 }

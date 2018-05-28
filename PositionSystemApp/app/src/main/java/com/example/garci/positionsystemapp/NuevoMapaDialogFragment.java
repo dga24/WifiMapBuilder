@@ -40,7 +40,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                if(!nombre.getText().equals("")&&!edificio.getText().equals("")&&!planta.getText().equals("")){
+                if(!nombre.getText().toString().matches("")&&!edificio.getText().toString().matches("")&&!planta.getText().toString().matches("")){
                     takePicture();
                 }
             }

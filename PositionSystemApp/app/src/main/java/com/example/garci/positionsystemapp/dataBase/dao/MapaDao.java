@@ -21,6 +21,11 @@ public interface MapaDao {
     @Query("Select * FROM mapa")
     List<Mapa> getAllMapas();
 
+    @Query("UPDATE mapa " +
+            "SET coordenadaid = :origenid " +
+            "WHERE mapaid = :mapaid")
+    long updateOrigenId(int mapaid, int origenid);
+
 
 
 
