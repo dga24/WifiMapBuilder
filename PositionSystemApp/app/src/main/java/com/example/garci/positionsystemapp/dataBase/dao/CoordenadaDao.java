@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 
 @Dao
-public interface coordenadaDao {
+public interface CoordenadaDao {
 
     @Insert
     long insertCoordenada(Coordenada coordenana);

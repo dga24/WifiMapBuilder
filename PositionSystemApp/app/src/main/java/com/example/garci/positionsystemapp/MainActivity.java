@@ -22,6 +22,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
@@ -31,6 +35,7 @@ import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
+import com.example.garci.positionsystemapp.model.Parameters;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import static java.lang.Integer.valueOf;
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PreCaptura.OnFragmentInteractionListener, HeatMap.OnFragmentInteractionListener, GestionChooser.OnFragmentInteractionListener {
@@ -58,6 +64,9 @@ public class MainActivity extends AppCompatActivity
     private HeatMap mHeatMap;
     private AppRoomDatabase db;
 
+    ImageButton btnRefresh;
+    TextView txtWifi;
+
 
 
     @Override
@@ -75,12 +84,19 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         permissionRequest();
         this.context = this;
-        scanWifi();
+
+        btnRefresh = (ImageButton) findViewById(R.id.btnRefreshWifi);
+        txtWifi = (TextView) findViewById(R.id.txtWifi);
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scanerWifi();
+            }
+        });
 
 
-
-        DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this),this);
-        Log.d("fin:    ","ya ne mainactivity.....");
+        //DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this),this);
+        //Log.d("fin:    ","ya ne mainactivity.....");
         //db = AppRoomDatabase.getAppDatabase(this);
         //System.out.print(db.estacionBaseDao().getEstacionBase(1).getTipo().toString());
 
@@ -166,6 +182,10 @@ public class MainActivity extends AppCompatActivity
 
     //Open Camera
 
+    void newMap(String name, String build, String floor){
+        dispatchTakePictureIntent();
+    }
+
     void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -243,16 +263,43 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, PERMS_INITIAL, 127);
     }
 
-    public void scanWifi(){
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        // Level of a Scan Result
-        List<ScanResult> wifiList = wifiManager.getScanResults();
-        long timestamp = 0;
-        for (ScanResult scanResult : wifiList) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                timestamp = scanResult.timestamp;
-            }
-            Log.d("wifimanager:    ","MAC: "+ scanResult.BSSID+"  SSID: " + scanResult.SSID+"  POTENCIA[dBm]: "+scanResult.level+ "Timestamp: " + String.valueOf(timestamp));
+//    public void scanWifi(){
+//        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        // Level of a Scan Result
+//        int rep=10;
+//        int i=0;
+//        while(i<rep) {
+//            try {
+//                sleep(800);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            wifiManager.startScan();
+//            List<ScanResult> wifiList = wifiManager.getScanResults();
+//            long timestamp = 0;
+//            String infoWifi = "";
+//            Log.i("scanWifi", "nuevo escaneo");
+//            for (ScanResult scanResult : wifiList) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    timestamp = scanResult.timestamp;
+//                }
+//                Log.d("wifimanager:    ", "MAC: " + scanResult.BSSID + "  SSID: " + scanResult.SSID + "  POTENCIA[dBm]: " + scanResult.level + "Timestamp: " + String.valueOf(timestamp));
+//                infoWifi += "MAC: " + scanResult.BSSID + "  SSID: " + scanResult.SSID + "\n  POTENCIA[dBm]: " + scanResult.level + " Timestamp: " + String.valueOf(timestamp) + "\n\n";
+//            }
+//            i++;
+//            //txtWifi.setText(infoWifi);
+//        }
+//    }
+
+    public void scanerWifi() {
+        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager.isWifiEnabled() == false) {
+            wifiManager.setWifiEnabled(true);
         }
+
+        int mSamples = 0;
+        int mTotalSamples = 10;
+        final WifiScan wifiScan = new WifiScan(mTotalSamples, mSamples, wifiManager,context);
+        wifiScan.execute();
     }
 }

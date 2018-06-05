@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.garci.positionsystemapp.adapter.SeñalAdapter;
 import com.example.garci.positionsystemapp.model.APSignalStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -28,6 +30,9 @@ public class HeatMap extends Fragment {
     private List<APSignalStatistics> signals;
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
+    ImageView imgMapaCapturahm;
+
+    private ca.hss.heatmaplib.HeatMap heatMap;
 
     private OnFragmentInteractionListener mListener;
 
@@ -45,6 +50,18 @@ public class HeatMap extends Fragment {
         signals = new ArrayList<>();
         recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvLista);
         recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
+        imgMapaCapturahm = (ImageView) view.findViewById(R.id.imgMapaCapturahm);
+        heatMap = (ca.hss.heatmaplib.HeatMap) view.findViewById(R.id.heatmapImg);
+        int hh =imgMapaCapturahm.getDrawable().getIntrinsicWidth();
+        int hhh =imgMapaCapturahm.getDrawable().getIntrinsicHeight();
+        heatMap.setMinimum(10);
+        heatMap.setMaximum(100.0);
+        Random rand = new Random();
+        for (int i = 0; i < 20; i++) {
+            ca.hss.heatmaplib.HeatMap.DataPoint point = new ca.hss.heatmaplib.HeatMap.DataPoint(rand.nextFloat(), rand.nextFloat(), rand.nextDouble() * 100.0);
+            heatMap.addData(point);
+        }
+
         data();
         inicializarAdaptador();
         return view;

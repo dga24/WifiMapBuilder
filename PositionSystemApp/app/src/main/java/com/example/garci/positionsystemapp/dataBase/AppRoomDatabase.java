@@ -11,12 +11,12 @@ import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
+import com.example.garci.positionsystemapp.dataBase.dao.CoordenadaDao;
 import com.example.garci.positionsystemapp.dataBase.dao.EstacionBaseDao;
 import com.example.garci.positionsystemapp.dataBase.dao.MapaDao;
 import com.example.garci.positionsystemapp.dataBase.dao.MedidaDao;
 import com.example.garci.positionsystemapp.dataBase.dao.MuestraDao;
 import com.example.garci.positionsystemapp.dataBase.dao.MuestrasDao;
-import com.example.garci.positionsystemapp.dataBase.dao.coordenadaDao;
 
 @Database(entities = {Coordenada.class,
         EstacionBase.class,
@@ -24,11 +24,12 @@ import com.example.garci.positionsystemapp.dataBase.dao.coordenadaDao;
         Medida.class,
         Muestra.class,
         Muestras.class}, version = 1)
+
 public abstract class AppRoomDatabase extends RoomDatabase {
 
     private static AppRoomDatabase INSTANCE;
 
-    public abstract coordenadaDao coordenadaDao();
+    public abstract CoordenadaDao coordenadaDao();
     public abstract EstacionBaseDao estacionBaseDao();
     public abstract MapaDao mapadao();
     public abstract MedidaDao medidaDao();

@@ -1,30 +1,20 @@
 <android.support.constraint.ConstraintLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/fondo"
 android:layout_margin="5dp"
 android:padding="5dp">
 
 
-<TextView
-    android:id="@+id/titleParamPreCap"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:theme="@style/MyTxtTitulo"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:text="Datos"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+
+
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
     android:orientation="horizontal"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -34,6 +24,36 @@ android:padding="5dp">
         android:layout_width="1dp"
         android:layout_weight="1"
         android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnRefreshScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Scan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnRefreshScan">
+
+
+            <TextView
+                android:id="@+id/tvWifiScan"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ScrollView>
 
     </android.support.constraint.ConstraintLayout>
     <View
@@ -52,13 +72,26 @@ android:padding="5dp">
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/titleParamPreCap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="72dp"
+            android:layout_marginTop="8dp"
+            android:text="Datos"
+            android:theme="@style/MyTxtTitulo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/textMuestras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/MyTxtVar"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/param_muestras"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:theme="@style/MyTxtVar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleParamPreCap" />
 
         <EditText
             android:id="@+id/editMuestras"
@@ -73,9 +106,11 @@ android:padding="5dp">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="115dp"
+            android:layout_marginTop="8dp"
             android:text="@string/param_periodo"
             android:theme="@style/MyTxtVar"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleParamPreCap" />
 
         <EditText
             android:id="@+id/editPeriodo"

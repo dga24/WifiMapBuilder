@@ -3,6 +3,8 @@ package com.example.garci.positionsystemapp;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,8 @@ import android.widget.ImageView;
 
 public class NuevoMapaDialogFragment extends DialogFragment {
 
-    EditText nombre;
-    EditText edificio;
+    EditText name;
+    EditText build;
     EditText planta;
     ImageView captura;
     Button cargarFoto;
@@ -26,8 +28,8 @@ public class NuevoMapaDialogFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.dialog_nuevo_mapa, container, false);
         getDialog().setTitle("Simple Dialog");
 
-        nombre = (EditText) rootView.findViewById(R.id.editNombreMapa);
-        edificio = (EditText) rootView.findViewById(R.id.editEdificioMapa);
+        name = (EditText) rootView.findViewById(R.id.editNombreMapa);
+        build = (EditText) rootView.findViewById(R.id.editEdificioMapa);
         planta = (EditText) rootView.findViewById(R.id.editPlantaMapa);
         cargarFoto = (Button) rootView.findViewById(R.id.cargarFoto);
 
@@ -35,12 +37,73 @@ public class NuevoMapaDialogFragment extends DialogFragment {
         btnGuardarMapa = (Button) rootView.findViewById(R.id.btnGuardarMapa);
         btnCancelarMapa = (Button) rootView.findViewById(R.id.btnCancelarMapa);
 
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
+                    cargarFoto.setEnabled(true);
+                }else{
+                    cargarFoto.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });     //enable/disable button
+        build.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
+                    cargarFoto.setEnabled(true);
+                }else{
+                    cargarFoto.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        planta.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
+                    cargarFoto.setEnabled(true);
+                }else{
+                    cargarFoto.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 
         cargarFoto.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(!nombre.getText().toString().matches("")&&!edificio.getText().toString().matches("")&&!planta.getText().toString().matches("")){
+                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
                     takePicture();
                 }
             }
@@ -56,7 +119,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
         btnGuardarMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).createMapa(nombre.toString(),edificio.toString(),planta.toString(), imgUri);
+                ((MainActivity)getActivity()).createMapa(name.toString(), build.toString(),planta.toString(), imgUri);
             }
         });
 
@@ -64,7 +127,8 @@ public class NuevoMapaDialogFragment extends DialogFragment {
     }
 
     public void takePicture(){
-        ((MainActivity)getActivity()).dispatchTakePictureIntent();
+        //((MainActivity)getActivity()).dispatchTakePictureIntent();
+        ((MainActivity)getActivity()).newMap(name.getText().toString(), build.getText().toString(),planta.getText().toString());
     }
 
     public void captureRealized(Uri imgUri){
@@ -74,5 +138,9 @@ public class NuevoMapaDialogFragment extends DialogFragment {
         captura.setVisibility(View.VISIBLE);
         btnCancelarMapa.setVisibility(View.VISIBLE);
         btnGuardarMapa.setVisibility(View.VISIBLE);
+    }
+
+    public void onChangeText(){
+
     }
 }

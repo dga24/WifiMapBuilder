@@ -17,8 +17,32 @@ import java.util.List;
 
 public class Manager {
 
+
+
+//    private CoordenadaDao mCoordenadaDao;
+//    private EstacionBaseDao mEstacionBaseDao;
+//    private MapaDao mMapaDao;
+//    private MedidaDao mMedidaDao;
+//    private MuestraDao mMuestraDao;
+//    private MuestrasDao mMuestrasDao;
+
     Utils utils;
     QualityCalculatorByRSSThreshold qualityCalculatorByRSSThreshold;
+
+//    Manager(Application application){
+//        AppRoomDatabase db = AppRoomDatabase.getAppDatabase(application);
+//        mCoordenadaDao = db.coordenadaDao();
+//        mEstacionBaseDao = db.estacionBaseDao();
+//        mMapaDao = db.mapadao();
+//        mMedidaDao = db.medidaDao();
+//        mMuestraDao = db.muestraDao();
+//        mMuestrasDao = db.muestrasDao();
+//
+//    }
+
+    public void getMuestrasByPosition(Position position){
+
+    }
 
 
     // 1. Obtener número de muestras
@@ -28,7 +52,8 @@ public class Manager {
     // 4. Para cada lista de muestras generar un BSSignalStatistics a partir del tipo
     // 5. Incluir el BSSignalStatics en la lista de salida.
 
-    public List<BSSignalStatistics> getMuestrasByPosition(int medidaID, QualityCalculator qualityCalculator,AppRoomDatabase db) {
+
+    public List<BSSignalStatistics> getMuestrasByMedida(int medidaID, QualityCalculator qualityCalculator,AppRoomDatabase db) {
         Medida medida = db.medidaDao().getMedidaById(medidaID);
         int numMuestras = medida.getNumMuestras();
 
@@ -39,10 +64,10 @@ public class Manager {
 
 
         //Con qe salga en una repeticion ya esta? ha de salir en todas?
-        /*for (Muestras m :
-                lstmuestras) {
-            bsids.add(db.muestraDao().getDifferentBsid(m.getMuestrasid()));
-        }*/
+//        for (Muestras m :
+//                lstmuestras) {
+//            bsids.add(db.muestraDao().getDifferentBsid(m.getMuestrasid()));
+//        }
         bsids.add(db.muestraDao().getDifferentBsid(lstmuestras.get(1).getMuestrasid()));
 
         List<EstacionBase> bsss = null; //lista estaciones base
@@ -73,7 +98,7 @@ public class Manager {
         return bsSignalStatistics;
     }
 
-    public long createMap(Mapa mapa, Posicion origen,AppRoomDatabase db){
+    public long createMap(Mapa mapa, Position origen, AppRoomDatabase db){
         mapa.setCoordenadaid(-1);
         long mapaid = db.mapadao().createMapa(mapa);
         Log.d("DB", "Mapa creado");
@@ -92,6 +117,11 @@ public class Manager {
     public long createBS(EstacionBase bs,AppRoomDatabase db){
         long id = db.estacionBaseDao().createEstacionBase(bs);
         return id;
+    }
+
+    public List<Mapa> getAllMapas(AppRoomDatabase db){
+        db.mapadao().getAllMapas();
+        return null;
     }
 
 }

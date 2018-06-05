@@ -1,13 +1,13 @@
 package com.example.garci.positionsystemapp.model;
 
-public class Posicion {
+public class Position {
     double x;
     double y;
     double z;
     double pixelX;
     double pixelY;
 
-    public Posicion(double x, double y, double z, double pixelX, double pixelY) {
+    public Position(double x, double y, double z, double pixelX, double pixelY) {
         this.x = x;
         this.y = y;
         this.z = z;
