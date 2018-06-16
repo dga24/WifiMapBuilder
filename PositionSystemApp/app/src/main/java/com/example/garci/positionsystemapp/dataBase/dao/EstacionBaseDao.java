@@ -24,5 +24,11 @@ public interface EstacionBaseDao {
     @Query("SELECT * FROM estacionbase WHERE mac = :mac")
     EstacionBase getEstacionBaseByMac(String mac);
 
+    @Query("SELECT EXISTS (SELECT * FROM estacionbase WHERE mac =:BSSID )")
+    int existBs(String BSSID);
+
+    @Query("SELECT bsid FROM estacionbase WHERE mac = :mac")
+    int getBSIDByMac(String mac);
+
 
 }

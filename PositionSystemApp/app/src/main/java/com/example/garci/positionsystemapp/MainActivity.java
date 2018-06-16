@@ -1,6 +1,8 @@
 package com.example.garci.positionsystemapp;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,6 +38,8 @@ import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
 import com.example.garci.positionsystemapp.model.Parameters;
+
+import org.xml.sax.helpers.ParserAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanerWifi();
+                SimpleScanWifi simpleScanWifi= new SimpleScanWifi((Activity) context);
             }
         });
 
@@ -263,43 +267,12 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, PERMS_INITIAL, 127);
     }
 
-//    public void scanWifi(){
-//        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        // Level of a Scan Result
-//        int rep=10;
-//        int i=0;
-//        while(i<rep) {
-//            try {
-//                sleep(800);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            wifiManager.startScan();
-//            List<ScanResult> wifiList = wifiManager.getScanResults();
-//            long timestamp = 0;
-//            String infoWifi = "";
-//            Log.i("scanWifi", "nuevo escaneo");
-//            for (ScanResult scanResult : wifiList) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    timestamp = scanResult.timestamp;
-//                }
-//                Log.d("wifimanager:    ", "MAC: " + scanResult.BSSID + "  SSID: " + scanResult.SSID + "  POTENCIA[dBm]: " + scanResult.level + "Timestamp: " + String.valueOf(timestamp));
-//                infoWifi += "MAC: " + scanResult.BSSID + "  SSID: " + scanResult.SSID + "\n  POTENCIA[dBm]: " + scanResult.level + " Timestamp: " + String.valueOf(timestamp) + "\n\n";
-//            }
-//            i++;
-//            //txtWifi.setText(infoWifi);
-//        }
-//    }
-
-    public void scanerWifi() {
+    public void startScan(Parameters parameters) {
         final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager.isWifiEnabled() == false) {
             wifiManager.setWifiEnabled(true);
         }
-
-        int mSamples = 0;
-        int mTotalSamples = 10;
-        final WifiScan wifiScan = new WifiScan(mTotalSamples, mSamples, wifiManager,context);
+        final WifiScan wifiScan = new WifiScan(parameters, wifiManager,context);
         wifiScan.execute();
     }
 }

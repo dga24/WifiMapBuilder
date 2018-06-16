@@ -18,10 +18,11 @@ public class Muestra {
     private int muestrasid;
     private double valor;
     private int nummuestra;
-    private String bsid;
+    private int bsid;
 
 
-    public Muestra(double valor, int nummuestra, String bsid) {
+    public Muestra(int muestrasid, double valor, int nummuestra, int bsid) {
+        this.muestrasid = muestrasid;
         this.valor = valor;
         this.nummuestra = nummuestra;
         this.bsid = bsid;
@@ -51,7 +52,7 @@ public class Muestra {
         this.nummuestra = nummuestra;
     }
 
-    public String getBsid() { return bsid; }
+    public int getBsid() { return bsid; }
 
-    public void setBsid(String bsid) { this.bsid = bsid; }
+    public void setBsid(int bsid) { this.bsid = bsid; }
 }

@@ -43,7 +43,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
                 if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
                     cargarFoto.setEnabled(true);
                 }else{
-                    cargarFoto.setEnabled(true);
+                    cargarFoto.setEnabled(false);
                 }
             }
 
@@ -56,14 +56,14 @@ public class NuevoMapaDialogFragment extends DialogFragment {
             public void afterTextChanged(Editable editable) {
 
             }
-        });     //enable/disable button
+        });     //enable/disable button tomar foto
         build.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
                     cargarFoto.setEnabled(true);
                 }else{
-                    cargarFoto.setEnabled(true);
+                    cargarFoto.setEnabled(false);
                 }
             }
 
@@ -83,7 +83,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
                 if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
                     cargarFoto.setEnabled(true);
                 }else{
-                    cargarFoto.setEnabled(true);
+                    cargarFoto.setEnabled(false);
                 }
             }
 
@@ -103,9 +103,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
-                    takePicture();
-                }
+                takePicture();
             }
         });
 
@@ -127,7 +125,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
     }
 
     public void takePicture(){
-        //((MainActivity)getActivity()).dispatchTakePictureIntent();
+        ((MainActivity)getActivity()).dispatchTakePictureIntent();
         ((MainActivity)getActivity()).newMap(name.getText().toString(), build.getText().toString(),planta.getText().toString());
     }
 

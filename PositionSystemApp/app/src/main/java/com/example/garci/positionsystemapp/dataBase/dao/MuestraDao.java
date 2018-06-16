@@ -1,6 +1,7 @@
 package com.example.garci.positionsystemapp.dataBase.dao;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Dao
 public interface MuestraDao {
+
+    @Insert
+    long createMuestra(Muestra muestra);
 
     @Query("SELECT * FROM muestra WHERE muestrasid =:muestrasid ")
     List<Muestra> getListaMuestras(int muestrasid);

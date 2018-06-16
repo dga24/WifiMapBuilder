@@ -22,6 +22,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.garci.positionsystemapp.model.Parameters;
+
 import java.io.BufferedReader;
 
 
@@ -49,7 +51,7 @@ public class PreCaptura extends Fragment {
     EditText editPeriodo;
     EditText editRepeticiones;
     EditText editTiempo;
-    Button btnStart;
+    Button btnStartCaptura;
     ImageButton refreshMap;
 
     TextView tvWifiScan;
@@ -66,7 +68,6 @@ public class PreCaptura extends Fragment {
     public PreCaptura() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -87,7 +88,7 @@ public class PreCaptura extends Fragment {
         editPeriodo = (EditText) view.findViewById(R.id.editPeriodo);
         editRepeticiones = (EditText) view.findViewById(R.id.editRepeticiones);
         editTiempo = (EditText) view.findViewById(R.id.editTiempo);
-        btnStart = (Button) view.findViewById(R.id.btnStart);
+        btnStartCaptura = (Button) view.findViewById(R.id.btnStartCaptura);
 
         tvWifiScan = (TextView) view.findViewById(R.id.tvWifiScan);
         btnRefreshScan = (Button) view.findViewById(R.id.btnRefreshScan);
@@ -118,8 +119,12 @@ public class PreCaptura extends Fragment {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(8);
 
-
-
+        btnStartCaptura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCaptura();
+            }
+        });
 
         canvas = new Canvas();
         imgMapaCaptura.setOnTouchListener(new View.OnTouchListener(){
@@ -137,13 +142,6 @@ public class PreCaptura extends Fragment {
         });
 
 
-//        refreshMap.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openMap();
-//            }
-//        });
-
         return  view;
     }
 
@@ -154,26 +152,8 @@ public class PreCaptura extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     public void openMap(){
         ((MainActivity)getActivity()).dispatchTakePictureIntent();
-
     }
 
     public void updateMap(Uri uri){
@@ -182,6 +162,14 @@ public class PreCaptura extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void startCaptura(){
+        Parameters parameters = new Parameters(Double.parseDouble(editPeriodo.getText().toString()),
+                                Integer.valueOf(editRepeticiones.getText().toString()),
+                                Double.parseDouble(editTiempo.getText().toString()),
+                                Integer.valueOf(editMuestras.getText().toString()));
+        ((MainActivity)getActivity()).startScan(parameters);
     }
 
 

@@ -17,4 +17,7 @@ public interface CoordenadaDao {
 
     @Query("SELECT * FROM coordenada WHERE coordenadaid = :coordenadaid")
     Coordenada getCoordenada(int coordenadaid);
+
+    @Query("SELECT * FROM coordenada WHERE x=:x AND y =:y AND mapaid=:mapaid")
+    Coordenada getCoordenadaByMapaAndPos(double x, double y,int mapaid);
 }

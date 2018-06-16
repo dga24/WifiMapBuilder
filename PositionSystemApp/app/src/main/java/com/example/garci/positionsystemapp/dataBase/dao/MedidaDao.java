@@ -14,7 +14,7 @@ import java.util.List;
 public interface MedidaDao {
 
     @Insert
-    void createMedida(Medida medida);
+    long createMedida(Medida medida);
 
 
     @Query("SELECT * FROM medida WHERE mapaid =:mapaid")

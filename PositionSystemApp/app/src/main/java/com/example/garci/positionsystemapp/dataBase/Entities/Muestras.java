@@ -14,8 +14,7 @@ public class Muestras {
     private int medidaid;
     private int repeticion;
 
-    public Muestras(int muestrasid, int medidaid, int repeticion) {
-        this.muestrasid = muestrasid;
+    public Muestras(int medidaid, int repeticion) {
         this.medidaid = medidaid;
         this.repeticion = repeticion;
     }

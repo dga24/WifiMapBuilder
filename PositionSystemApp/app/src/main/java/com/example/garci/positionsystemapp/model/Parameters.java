@@ -2,11 +2,11 @@ package com.example.garci.positionsystemapp.model;
 
 public class Parameters {
     private double period;
-    private double rep;
+    private int rep;
     private double temp;
     private int numSample;
 
-    public Parameters(double period, double rep, double temp, int numSample) {
+    public Parameters(double period, int rep, double temp, int numSample) {
         this.period = period;
         this.rep = rep;
         this.temp = temp;
@@ -21,11 +21,11 @@ public class Parameters {
         this.period = period;
     }
 
-    public double getRep() {
+    public int getRep() {
         return rep;
     }
 
-    public void setRep(double rep) {
+    public void setRep(int rep) {
         this.rep = rep;
     }
 

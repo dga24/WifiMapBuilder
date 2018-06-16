@@ -165,7 +165,7 @@ android:padding="5dp">
             app:layout_constraintTop_toBottomOf="@+id/textTiempo" />
 
         <Button
-            android:id="@+id/btnStart"
+            android:id="@+id/btnStartCaptura"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
