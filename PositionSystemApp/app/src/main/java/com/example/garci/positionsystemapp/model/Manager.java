@@ -161,6 +161,32 @@ public class Manager {
         return bsSignalStatistics;
     }
 
+
+    public void getAllMapas(final AppRoomDatabase db,final List<Mapa> mapas, OnFinishListener listener){
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
+
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
+            }
+
+            @Override
+            public int run() {
+                mapas.addAll(db.mapadao().getAllMapas());
+                Log.d("DB", "Mapas obtenidos");
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return "saving map...";
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+    }
+
     public void createMap(final Mapa mapa, final AppRoomDatabase db, OnFinishListener listener){
 
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);
@@ -191,6 +217,11 @@ public class Manager {
         return db.mapadao().getLastMapid();
     }
 
+
+    public Mapa getMapa(final int mapaid, final AppRoomDatabase db){
+        return db.mapadao().getMapa(mapaid);
+    }
+
     public void setCoorOrigen(final Mapa mapa, final Coordenada coordenada, final AppRoomDatabase db, OnFinishListener listener){
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);
 
@@ -206,12 +237,13 @@ public class Manager {
                 long coorid = db.coordenadaDao().insertCoordenada(coordenada);
                 Log.d("DB", "Coordenada creada");
                 db.mapadao().updateOrigenId(mapa.getMapaid(), (int) coorid);
+                mapa.setCoordenadaid((int) coorid);
                 return 0;
             }
 
             @Override
             public String description() {
-                return "saving map...";
+                return "saving CoordenadaOrigen...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);
@@ -317,11 +349,6 @@ public class Manager {
         }
 
         return muestrasids;
-    }
-
-    public List<Mapa> getAllMapas(AppRoomDatabase db){
-        db.mapadao().getAllMapas();
-        return null;
     }
 
     public int createBS(MuestraCapturada mc, AppRoomDatabase db){

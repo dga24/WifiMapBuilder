@@ -25,7 +25,7 @@
 
 
         <TextView
-            android:id="@+id/tvPixelX"
+            android:id="@+id/tvParamPixelX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -35,17 +35,17 @@
             app:layout_constraintTop_toBottomOf="@+id/tvWifiScan" />
 
         <TextView
-            android:id="@+id/tvPixelY"
+            android:id="@+id/tvParamPixelY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="pixelY"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvPixelX" />
+            app:layout_constraintTop_toBottomOf="@+id/tvParamPixelX" />
 
         <Button
-            android:id="@+id/guardarCoordenadaOrigen"
+            android:id="@+id/btnguardarCoordenadaOrigen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

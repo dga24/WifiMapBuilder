@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.garci.positionsystemapp.adapter.SeñalAdapter;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 

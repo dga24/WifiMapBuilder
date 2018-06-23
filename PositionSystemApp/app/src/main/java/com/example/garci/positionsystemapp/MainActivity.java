@@ -2,7 +2,6 @@ package com.example.garci.positionsystemapp;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.support.design.widget.NavigationView;
@@ -44,6 +44,7 @@ import com.example.garci.positionsystemapp.model.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -316,6 +317,33 @@ public class MainActivity extends AppCompatActivity
                 mPreCaptura.changeMap(mapa);
             }
         });
+    }
+
+    public void createCoorOrigen(final Mapa mapa, final Coordenada coordenada){
+        manager = new Manager(this);
+        manager.setCoorOrigen(mapa, coordenada, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                Toast toast = Toast.makeText(context, "Guardado coordenada Origen ", Toast.LENGTH_SHORT);
+                toast.show();
+                mPreCaptura.changeMap(mapa);
+            }
+        });
+    }
+
+    public void getAllMaps(){
+        final List<Mapa> mapas = new ArrayList<>();
+        manager.getAllMapas(db,mapas, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                mPreCaptura.cargarMapaDialogFragment.inicializarAdaptador(mapas,context,getSupportFragmentManager());
+            }
+        });
+    }
+
+    public Mapa getMapa(int mapaid){
+        final Mapa mapa = null;
+        return manager.getMapa(mapaid,db);
     }
 
 }

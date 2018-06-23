@@ -93,12 +93,20 @@ public class PreCaptura extends Fragment {
     ConstraintLayout newMapaParam;
     ConstraintLayout paramPreCaptura;
 
+    AcceptNewMap acceptNewMap;
+    CargarMapaDialogFragment cargarMapaDialogFragment;
+
+    TextView tvParamPixelX;
+    TextView tvParamPixelY;
+    Button btnguardarCoordenadaOrigen;
+
+    boolean existmapa = true;
+
 
 
     public PreCaptura() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,12 +142,21 @@ public class PreCaptura extends Fragment {
         simpleScanWifi = new SimpleScanWifi(getActivity());
 
 
+        btnguardarCoordenadaOrigen = (Button) view.findViewById(R.id.btnguardarCoordenadaOrigen);
+        tvParamPixelX = (TextView) view.findViewById(R.id.tvParamPixelX);
+        tvParamPixelY = (TextView) view.findViewById(R.id.tvParamPixelY);
+
 
         manager = ((MainActivity) getActivity()).getManager();
         db = ((MainActivity) getActivity()).getDb();
 
-
-        cargarMapa();
+        if(getArguments() != null) {    //se acaba de crear un nuevo mapa -> cargar mapa y pantalla para indicar Origen
+            int id = (getArguments().getInt("mapaid"));
+            Mapa mapaAux = ((MainActivity)getActivity()).getMapa(id);
+            changeMap(mapaAux);
+        }else{
+            cargarMapa();
+        }
 
 
 
@@ -184,8 +201,23 @@ public class PreCaptura extends Fragment {
                 //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
                 tvPixelX.setText(String.valueOf(pixelX));
                 tvPixelY.setText(String.valueOf(pixelY));
-                canvas.drawPoint(pixelX,pixelY, mPaint);
+                tvParamPixelX.setText(String.valueOf(pixelX));
+                tvParamPixelY.setText(String.valueOf(pixelY));
+                if (mapa!=null) {
+                    coordenada = new Coordenada(mapa.getMapaid(), Double.valueOf(txtX.getText().toString()),
+                            Double.valueOf(txtY.getText().toString()),
+                            Double.valueOf(txtZ.getText().toString()),
+                            pixelX, pixelY);
+                    canvas.drawPoint(pixelX, pixelY, mPaint);
+                }
                 return true;
+            }
+        });
+
+        btnguardarCoordenadaOrigen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).createCoorOrigen(mapa,coordenada);
             }
         });
 
@@ -222,7 +254,7 @@ public class PreCaptura extends Fragment {
 
     public void showAcceptNewMap(Mapa mapa){
         FragmentManager fm = getFragmentManager();
-        AcceptNewMap acceptNewMap = new AcceptNewMap();
+        acceptNewMap = new AcceptNewMap();
         acceptNewMap.setMapa(mapa);
         acceptNewMap.show(getActivity().getSupportFragmentManager(),"Fdialog");
 //        Bundle args= new Bundle();
@@ -237,18 +269,20 @@ public class PreCaptura extends Fragment {
 
     public void  cargarMapa(){
         FragmentManager fm = getFragmentManager();
-        CargarMapaDialogFragment cargarMapaDialogFragment = new CargarMapaDialogFragment();
+        cargarMapaDialogFragment = new CargarMapaDialogFragment();
         cargarMapaDialogFragment.show(fm, "Sample Fragment");
+        ((MainActivity)getActivity()).getAllMaps();
     }
 
     public void changeMap(Mapa mapa){
         this.mapa = mapa;
         imgMapaCaptura.setImageURI(Uri.parse(mapa.getImgMapa()));
-        simpleScanWifi.execute();
         if(mapa.getCoordenadaid()==null){
             haveCoor0=false;
             txtX.setText(String.valueOf(0));
             txtY.setText(String.valueOf(0));
+            txtX.setEnabled(false);
+            txtY.setEnabled(false);
             paramPreCaptura.setVisibility(View.GONE);
             newMapaParam.setVisibility(View.VISIBLE);
             btnSelect.setVisibility(View.INVISIBLE);
@@ -258,6 +292,8 @@ public class PreCaptura extends Fragment {
             paramPreCaptura.setVisibility(View.VISIBLE);
             newMapaParam.setVisibility(View.GONE);
             btnSelect.setVisibility(View.VISIBLE);
+            txtX.setEnabled(true);
+            txtY.setEnabled(true);
         }
     }
 }
