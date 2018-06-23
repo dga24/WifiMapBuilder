@@ -26,6 +26,9 @@ public interface MapaDao {
             "WHERE mapaid = :mapaid")
     long updateOrigenId(int mapaid, int origenid);
 
+    @Query("SELECT * FROM mapa ORDER BY mapaid DESC LIMIT 1")
+    long getLastMapid();
+
 
 
 

@@ -11,14 +11,14 @@ import android.media.Image;
 public class Mapa {
 
     @PrimaryKey(autoGenerate = true)
-    private int mapaid;
+    private Integer mapaid;
     private String nombre;
     private String edificio;
-    private int planta;
+    private Integer planta;
     private String imgMapa;
-    private int coordenadaid;
+    private Integer coordenadaid;
 
-    public Mapa(String nombre, String edificio, int planta, String imgMapa, int coordenadaid) {
+    public Mapa(String nombre, String edificio, Integer planta, String imgMapa, Integer coordenadaid) {
         this.nombre = nombre;
         this.edificio = edificio;
         this.planta = planta;
@@ -26,11 +26,12 @@ public class Mapa {
         this.coordenadaid = coordenadaid;
     }
 
-    public int getMapaid() {
+
+    public Integer getMapaid() {
         return mapaid;
     }
 
-    public void setMapaid(int mapaid) {
+    public void setMapaid(Integer mapaid) {
         this.mapaid = mapaid;
     }
 
@@ -50,11 +51,11 @@ public class Mapa {
         this.edificio = edificio;
     }
 
-    public int getPlanta() {
+    public Integer getPlanta() {
         return planta;
     }
 
-    public void setPlanta(int planta) {
+    public void setPlanta(Integer planta) {
         this.planta = planta;
     }
 
@@ -66,11 +67,11 @@ public class Mapa {
         this.imgMapa = imgMapa;
     }
 
-    public int getCoordenadaid() {
+    public Integer getCoordenadaid() {
         return coordenadaid;
     }
 
-    public void setCoordenadaid(int coordenadaid) {
+    public void setCoordenadaid(Integer coordenadaid) {
         this.coordenadaid = coordenadaid;
     }
 }

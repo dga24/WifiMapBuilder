@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
 import com.example.garci.positionsystemapp.model.Parameters;
@@ -37,7 +38,9 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
         private Condition mCndNewSample = mLock.newCondition();
         private BroadcastReceiver mBroadcastReceiver;
         private List<EstacionBase> bss =null;
-        private List<MuestraCapturada> lstMuestra;
+        private List<MuestraCapturada> lstMuestraCap;
+        private Coordenada coordenada;
+        private int angle;
 
 
     public WifiScan(Parameters parameters, WifiManager wifiManager,Context context) {
@@ -45,6 +48,8 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
             this.wifiManager = wifiManager;
             this.context = context;
             mrep=0;
+            this.coordenada = coordenada;
+            this.angle = angle;
         }
 
 
@@ -69,7 +74,7 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
                             timestamp = scanResult.timestamp;
                         }
                         MuestraCapturada m= createMuestra(scanResult,numMuestra,mrep);
-                        lstMuestra.add(m);
+                        lstMuestraCap.add(m);
                         numMuestra++;
                         ssid =scanResult.SSID;
                         Log.d("WifiManager:    ", "MAC: " + scanResult.BSSID + "  SSID: " + scanResult.SSID + "" + "  POTENCIA[dBm]: " + scanResult.level + "Timestamp: " + String.valueOf(timestamp));
@@ -130,6 +135,7 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
             }
             finally {
                 mLock.unlock();
+                ((MainActivity)context).saveCapture(lstMuestraCap, parameters);
             }
             return null;
         }

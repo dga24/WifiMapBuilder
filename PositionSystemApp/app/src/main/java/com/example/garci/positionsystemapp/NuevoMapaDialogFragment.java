@@ -3,6 +3,7 @@ package com.example.garci.positionsystemapp;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 
 public class NuevoMapaDialogFragment extends DialogFragment {
 
@@ -80,7 +83,7 @@ public class NuevoMapaDialogFragment extends DialogFragment {
         planta.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.getText().toString().matches("")){
+                if(!name.getText().toString().matches("")&&!build.getText().toString().matches("")&&!planta.toString().isEmpty()){
                     cargarFoto.setEnabled(true);
                 }else{
                     cargarFoto.setEnabled(false);
@@ -125,11 +128,12 @@ public class NuevoMapaDialogFragment extends DialogFragment {
     }
 
     public void takePicture(){
-        ((MainActivity)getActivity()).dispatchTakePictureIntent();
+        dismiss();
         ((MainActivity)getActivity()).newMap(name.getText().toString(), build.getText().toString(),planta.getText().toString());
     }
 
-    public void captureRealized(Uri imgUri){
+    public void captureRealized(Mapa mapa){
+        imgUri = Uri.parse(mapa.getImgMapa());
         this.imgUri= imgUri;
         cargarFoto.setVisibility(View.GONE);
         captura.setImageURI(imgUri);

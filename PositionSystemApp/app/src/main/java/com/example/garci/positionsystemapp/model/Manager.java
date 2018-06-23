@@ -161,7 +161,7 @@ public class Manager {
         return bsSignalStatistics;
     }
 
-    public void createMap(final Mapa mapa, final Position origen, final AppRoomDatabase db){
+    public void createMap(final Mapa mapa, final AppRoomDatabase db, OnFinishListener listener){
 
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);
 
@@ -175,15 +175,6 @@ public class Manager {
             public int run() {
                 long mapaid = db.mapadao().createMapa(mapa);
                 Log.d("DB", "Mapa creado");
-                Coordenada coor = null;
-                coor.setMapaid((int) mapaid);
-                coor.setX(origen.getX());
-                coor.setY(origen.getY());
-                coor.setZ(origen.getZ());
-                coor.setPixelx(origen.getPixelX());
-                coor.setPixely(origen.getPixelY());
-                long coorid = db.coordenadaDao().insertCoordenada(coor);
-                db.mapadao().updateOrigenId((int)mapaid,(int) coorid);
                 return 0;
             }
 
@@ -192,9 +183,44 @@ public class Manager {
                 return "saving map...";
             }
         });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
     }
 
-    public void createListBs(final List<EstacionBase> bs, final AppRoomDatabase db){
+    public long getLastMapid(final AppRoomDatabase db){
+        return db.mapadao().getLastMapid();
+    }
+
+    public void setCoorOrigen(final Mapa mapa, final Coordenada coordenada, final AppRoomDatabase db, OnFinishListener listener){
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
+
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
+            }
+
+            @Override
+            public int run() {
+                coordenada.setMapaid(mapa.getMapaid());
+                long coorid = db.coordenadaDao().insertCoordenada(coordenada);
+                Log.d("DB", "Coordenada creada");
+                db.mapadao().updateOrigenId(mapa.getMapaid(), (int) coorid);
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return "saving map...";
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+    }
+
+
+
+    public void createListBs(final List<EstacionBase> bs, final AppRoomDatabase db, OnFinishListener listener){
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);
 
         myAsyncTask.addTask(new ITask() {
@@ -215,10 +241,12 @@ public class Manager {
                 return null;
             }
         });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
     }
 
 
-    public void saveCapture(final List<MuestraCapturada> lstMuestraCap, final Parameters parameters, final Coordenada coordenada, final int angle, OnFinishListener listener, final AppRoomDatabase db){
+    public void saveCapture(final List<MuestraCapturada> lstMuestraCap, final Parameters parameters, final Coordenada coordenada, final int angle, final AppRoomDatabase db, OnFinishListener listener){
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);
         int medidaid;
 
@@ -240,6 +268,8 @@ public class Manager {
                 return null;
             }
         });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
 
     }
 

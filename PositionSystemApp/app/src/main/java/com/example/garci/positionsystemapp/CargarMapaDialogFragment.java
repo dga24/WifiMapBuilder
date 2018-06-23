@@ -41,6 +41,7 @@ public class CargarMapaDialogFragment extends DialogFragment {
         FragmentManager fm = getFragmentManager();
         NuevoMapaDialogFragment nuevoMapaDialogFragment = new NuevoMapaDialogFragment ();
         nuevoMapaDialogFragment.show(fm, "Sample Fragment");
+        dismiss();
 
     }
 }

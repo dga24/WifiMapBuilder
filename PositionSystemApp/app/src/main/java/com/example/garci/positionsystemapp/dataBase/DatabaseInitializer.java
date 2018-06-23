@@ -7,7 +7,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.garci.positionsystemapp.MainActivity;
+import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
+
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 
@@ -26,9 +30,17 @@ public class DatabaseInitializer {
 
 
     private static void populateWithTestData(AppRoomDatabase db) {
-        EstacionBase bs = new EstacionBase("WLAN1","FF:FF:FF:FF:FF:FF","WIFI");
+        EstacionBase bs = new EstacionBase("WLAN_TEST-DB","FF:FF:FF:FF:FF:FF","WIFI");
+        Mapa mapa = new Mapa("Test","Test",0,"url",null);
+        long mapaid = db.mapadao().createMapa(mapa);
+        Coordenada coor = new Coordenada((int) mapaid,0,0,0,0,0);
+        db.coordenadaDao().insertCoordenada(coor);
         db.estacionBaseDao().createEstacionBase(bs);
-        Log.d(DatabaseInitializer.TAG, "Mac insertada:          " + db.estacionBaseDao().getAllEstacionBase().get(1).getMac().toString());
+        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.estacionBaseDao().getAllEstacionBase().get(0).getSsid().toString());
+        int size =db.coordenadaDao().getAllCoordenadas().size();
+        List<Coordenada> coordenadas = db.coordenadaDao().getAllCoordenadas();
+        Log.d(DatabaseInitializer.TAG, "Coordenada insertada:          " + db.coordenadaDao().getAllCoordenadas().size());
+        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.mapadao().getMapa(1).getNombre().toString());
     }
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
@@ -45,11 +57,6 @@ public class DatabaseInitializer {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             populateWithTestData(mDb);
             Log.d(DatabaseInitializer.TAG,"ahora el mio...");
             Log.d(DatabaseInitializer.TAG, String.valueOf(mDb.estacionBaseDao().getEstacionBaseByMac("FF:FF:FF:FF:FF:FF").getBsid()));

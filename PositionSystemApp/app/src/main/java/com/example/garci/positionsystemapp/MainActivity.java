@@ -2,15 +2,15 @@ package com.example.garci.positionsystemapp;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Application;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -22,24 +22,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
 import com.example.garci.positionsystemapp.dataBase.DatabaseInitializer;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
-import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
-import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
-import com.example.garci.positionsystemapp.dataBase.Entities.Muestras;
+import com.example.garci.positionsystemapp.model.ITask;
+import com.example.garci.positionsystemapp.model.Manager;
+import com.example.garci.positionsystemapp.model.MuestraCapturada;
+import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
-
-import org.xml.sax.helpers.ParserAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,10 +66,18 @@ public class MainActivity extends AppCompatActivity
     private GestionChooser mGestionChooser;
     private GestionDatos mGestionDatos;
     private HeatMap mHeatMap;
+
     private AppRoomDatabase db;
+    Manager manager;
+    Mapa mapa;
 
     ImageButton btnRefresh;
     TextView txtWifi;
+
+    Coordenada coordenada;
+    int angle;
+
+
 
 
 
@@ -99,13 +107,22 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        //DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this),this);
-        //Log.d("fin:    ","ya ne mainactivity.....");
-        //db = AppRoomDatabase.getAppDatabase(this);
+        manager = new Manager(this);
+        DatabaseInitializer.populateAsync(AppRoomDatabase.getAppDatabase(this),this);
+        Log.d("fin:    ","ya ne mainactivity.....");
+        db = AppRoomDatabase.getAppDatabase(this);
         //System.out.print(db.estacionBaseDao().getEstacionBase(1).getTipo().toString());
 
 
 
+    }
+
+    public AppRoomDatabase getDb() {
+        return db;
+    }
+
+    public Manager getManager() {
+        return manager;
     }
 
     @Override
@@ -186,7 +203,8 @@ public class MainActivity extends AppCompatActivity
 
     //Open Camera
 
-    void newMap(String name, String build, String floor){
+    void newMap(String name, String building, String floor){
+        mapa = new Mapa(name, building,Integer.parseInt(floor),"",null);
         dispatchTakePictureIntent();
     }
 
@@ -216,12 +234,12 @@ public class MainActivity extends AppCompatActivity
 
     //receive camera result
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if(mImgUri==null) return;
-            NuevoMapaDialogFragment nuevoMapaDialogFragment = (NuevoMapaDialogFragment) getSupportFragmentManager().findFragmentById(R.id.nuevoMapa);
-            nuevoMapaDialogFragment.captureRealized(mImgUri);
-            //mPreCaptura.updateMap(mImgUri);
+            mapa.setImgMapa(mImgUri.toString());
+            mPreCaptura.showAcceptNewMap(mapa);
             mImgUri=null;
         }
     }
@@ -267,7 +285,9 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, PERMS_INITIAL, 127);
     }
 
-    public void startScan(Parameters parameters) {
+    public void startScan(Parameters parameters, Coordenada coordenada, int angle) {
+        this.coordenada= coordenada;
+        this.angle = angle;
         final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager.isWifiEnabled() == false) {
             wifiManager.setWifiEnabled(true);
@@ -275,4 +295,27 @@ public class MainActivity extends AppCompatActivity
         final WifiScan wifiScan = new WifiScan(parameters, wifiManager,context);
         wifiScan.execute();
     }
+
+    public void saveCapture(List<MuestraCapturada> lstMuestraCap, Parameters parameters){
+        manager.saveCapture(lstMuestraCap, parameters, coordenada, angle, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+
+            }
+        });
+    }
+
+    public void saveMap(final Mapa mapa){
+        manager = new Manager(this);
+        manager.createMap(mapa, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                Toast toast = Toast.makeText(context, "Guardado mapa ", Toast.LENGTH_SHORT);
+                toast.show();
+                mapa.setMapaid((int) manager.getLastMapid(db));
+                mPreCaptura.changeMap(mapa);
+            }
+        });
+    }
+
 }

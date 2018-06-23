@@ -1,22 +1,25 @@
 package com.example.garci.positionsystemapp.dataBase.Entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Mapa.class,
+        parentColumns = "mapaid",
+        childColumns = "mapaid"))
 public class Coordenada {
 
     @PrimaryKey(autoGenerate = true)
-    int coordenadaid;
-    int mapaid;
+    Integer coordenadaid;
+    Integer mapaid;
     double x;
     double y;
     double z;
-    double pixelx;
-    double pixely;
+    Integer pixelx;
+    Integer pixely;
 
 
-    public Coordenada(int mapaid, double x, double y, double z, double pixelx, double pixely) {
+    public Coordenada(Integer mapaid, double x, double y, double z, Integer pixelx, Integer pixely) {
         this.mapaid = mapaid;
         this.x = x;
         this.y = y;
@@ -25,11 +28,11 @@ public class Coordenada {
         this.pixely = pixely;
     }
 
-    public int getCoordenadaid() {
+    public Integer getCoordenadaid() {
         return coordenadaid;
     }
 
-    public void setCoordenadaid(int coordenadaid) {
+    public void setCoordenadaid(Integer coordenadaid) {
         this.coordenadaid = coordenadaid;
     }
 
@@ -57,27 +60,27 @@ public class Coordenada {
         this.z = z;
     }
 
-    public int getMapaid() {
+    public Integer getMapaid() {
         return mapaid;
     }
 
-    public void setMapaid(int mapaid) {
+    public void setMapaid(Integer mapaid) {
         this.mapaid = mapaid;
     }
 
-    public double getPixelx() {
+    public Integer getPixelx() {
         return pixelx;
     }
 
-    public void setPixelx(double pixelx) {
+    public void setPixelx(Integer pixelx) {
         this.pixelx = pixelx;
     }
 
-    public double getPixely() {
+    public Integer getPixely() {
         return pixely;
     }
 
-    public void setPixely(double pixely) {
+    public void setPixely(Integer pixely) {
         this.pixely = pixely;
     }
 

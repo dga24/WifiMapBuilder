@@ -10,8 +10,12 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.Layout;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,11 +24,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
+import com.example.garci.positionsystemapp.model.ITask;
+import com.example.garci.positionsystemapp.model.Manager;
+import com.example.garci.positionsystemapp.model.MuestraCapturada;
+import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
 
 import java.io.BufferedReader;
+import java.util.List;
 
 
 /**
@@ -38,14 +51,26 @@ public class PreCaptura extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    Manager manager;
+    AppRoomDatabase db;
+    Mapa mapa;
+    Coordenada coordenada;
+    int angle;
+    int pixelX = 0;
+    int pixelY = 0;
+
+
     AbrirMapaDialog abrirMapa;
 
     EditText txtX;
     EditText txtY;
     EditText txtZ;
-    EditText editAng;
+    EditText txtAng;
     Button btnSelect;
     ImageView imgMapaCaptura;
+
+    TextView tvPixelX;
+    TextView tvPixelY;
 
     EditText editMuestras;
     EditText editPeriodo;
@@ -62,6 +87,11 @@ public class PreCaptura extends Fragment {
     Canvas canvas;
 
     Paint mPaint;
+
+    boolean haveCoor0 = true;
+
+    ConstraintLayout newMapaParam;
+    ConstraintLayout paramPreCaptura;
 
 
 
@@ -80,9 +110,12 @@ public class PreCaptura extends Fragment {
         txtX = (EditText) view.findViewById(R.id.editX);
         txtY = (EditText) view.findViewById(R.id.editY);
         txtZ = (EditText) view.findViewById(R.id.editZ);
-        editAng = (EditText) view.findViewById(R.id.editAng);
+        txtAng = (EditText) view.findViewById(R.id.editAng);
         btnSelect = (Button) view.findViewById(R.id.btnSelect);
         imgMapaCaptura = (ImageView) view.findViewById(R.id.imgMapaCaptura);
+
+        tvPixelX = (TextView) view.findViewById(R.id.tvPixelX);
+        tvPixelY = (TextView) view.findViewById(R.id.tvPixelY);
 
         editMuestras = (EditText) view.findViewById(R.id.editMuestras);
         editPeriodo = (EditText) view.findViewById(R.id.editPeriodo);
@@ -93,10 +126,22 @@ public class PreCaptura extends Fragment {
         tvWifiScan = (TextView) view.findViewById(R.id.tvWifiScan);
         btnRefreshScan = (Button) view.findViewById(R.id.btnRefreshScan);
 
+        newMapaParam = (ConstraintLayout) view.findViewById(R.id.newMapaParam);
+        paramPreCaptura = (ConstraintLayout) view.findViewById(R.id.contentParam);
+
         refreshMap = (ImageButton) view.findViewById(R.id.btnRefreshImagen);
 
         simpleScanWifi = new SimpleScanWifi(getActivity());
-        simpleScanWifi.execute();
+
+
+
+        manager = ((MainActivity) getActivity()).getManager();
+        db = ((MainActivity) getActivity()).getDb();
+
+
+        cargarMapa();
+
+
 
         btnRefreshScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,9 +154,7 @@ public class PreCaptura extends Fragment {
         refreshMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                CargarMapaDialogFragment cargarMapaDialogFragment = new CargarMapaDialogFragment();
-                cargarMapaDialogFragment.show(fm, "Sample Fragment");
+                cargarMapa();
             }
         });
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -122,6 +165,11 @@ public class PreCaptura extends Fragment {
         btnStartCaptura.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                coordenada = new Coordenada(mapa.getMapaid(), Double.parseDouble(txtX.getText().toString()),
+                                            Double.parseDouble(txtY.getText().toString()),
+                                            Double.parseDouble(txtZ.getText().toString()),
+                                            pixelX,pixelY);
+                angle = Integer.parseInt(txtAng.getText().toString());
                 startCaptura();
             }
         });
@@ -131,12 +179,12 @@ public class PreCaptura extends Fragment {
             final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                int x = (int)event.getRawX();
-                int y = (int)event.getRawY();
+                pixelX = (int)event.getRawX();
+                pixelY = (int)event.getRawY();
                 //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
-                txtX.setText(String.valueOf(x));
-                txtY.setText(String.valueOf(y));
-                canvas.drawPoint(x,y, mPaint);
+                tvPixelX.setText(String.valueOf(pixelX));
+                tvPixelY.setText(String.valueOf(pixelY));
+                canvas.drawPoint(pixelX,pixelY, mPaint);
                 return true;
             }
         });
@@ -169,9 +217,47 @@ public class PreCaptura extends Fragment {
                                 Integer.valueOf(editRepeticiones.getText().toString()),
                                 Double.parseDouble(editTiempo.getText().toString()),
                                 Integer.valueOf(editMuestras.getText().toString()));
-        ((MainActivity)getActivity()).startScan(parameters);
+        ((MainActivity)getActivity()).startScan(parameters, coordenada, angle);
     }
 
+    public void showAcceptNewMap(Mapa mapa){
+        FragmentManager fm = getFragmentManager();
+        AcceptNewMap acceptNewMap = new AcceptNewMap();
+        acceptNewMap.setMapa(mapa);
+        acceptNewMap.show(getActivity().getSupportFragmentManager(),"Fdialog");
+//        Bundle args= new Bundle();
+//        args.putString("name", mapa.getNombre());
+//        args.putString("building", mapa.getEdificio());
+//        args.putInt("floor", mapa.getPlanta());
+//        args.putString("imgUriString", mapa.getImgMapa().toString());
+//        acceptNewMap.setArguments(args);
 
+//        acceptNewMap.show(getFragmentManager(),"acceptnewmapFragment");
+    }
 
+    public void  cargarMapa(){
+        FragmentManager fm = getFragmentManager();
+        CargarMapaDialogFragment cargarMapaDialogFragment = new CargarMapaDialogFragment();
+        cargarMapaDialogFragment.show(fm, "Sample Fragment");
+    }
+
+    public void changeMap(Mapa mapa){
+        this.mapa = mapa;
+        imgMapaCaptura.setImageURI(Uri.parse(mapa.getImgMapa()));
+        simpleScanWifi.execute();
+        if(mapa.getCoordenadaid()==null){
+            haveCoor0=false;
+            txtX.setText(String.valueOf(0));
+            txtY.setText(String.valueOf(0));
+            paramPreCaptura.setVisibility(View.GONE);
+            newMapaParam.setVisibility(View.VISIBLE);
+            btnSelect.setVisibility(View.INVISIBLE);
+        }
+        else{
+            haveCoor0=true;
+            paramPreCaptura.setVisibility(View.VISIBLE);
+            newMapaParam.setVisibility(View.GONE);
+            btnSelect.setVisibility(View.VISIBLE);
+        }
+    }
 }

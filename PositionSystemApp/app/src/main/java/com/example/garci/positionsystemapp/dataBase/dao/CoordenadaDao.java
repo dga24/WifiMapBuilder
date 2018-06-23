@@ -6,6 +6,8 @@ import android.arch.persistence.room.Query;
 
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 
+import java.util.List;
+
 @Dao
 public interface CoordenadaDao {
 
@@ -20,4 +22,7 @@ public interface CoordenadaDao {
 
     @Query("SELECT * FROM coordenada WHERE x=:x AND y =:y AND mapaid=:mapaid")
     Coordenada getCoordenadaByMapaAndPos(double x, double y,int mapaid);
+
+    @Query("Select * FROM coordenada")
+    List<Coordenada> getAllCoordenadas();
 }
