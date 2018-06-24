@@ -1,9 +1,12 @@
 package com.example.garci.positionsystemapp;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import com.example.garci.positionsystemapp.model.PointCoverage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -42,6 +46,8 @@ public class HeatMap extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    Drawable drawable;
+
     private Mapa mapa;
 
     public HeatMap() {
@@ -64,15 +70,27 @@ public class HeatMap extends Fragment {
         heatMapImg = (ca.hss.heatmaplib.HeatMap) view.findViewById(R.id.heatmapImg);
         int hh =imgMapaCapturahm.getDrawable().getIntrinsicWidth();
         int hhh =imgMapaCapturahm.getDrawable().getIntrinsicHeight();
+
         heatMapImg.setMinimum(10);
         heatMapImg.setMaximum(100.0);
-        Random rand = new Random();
-        for (int i = 0; i < 20; i++) {
-            ca.hss.heatmaplib.HeatMap.DataPoint point = new  ca.hss.heatmaplib.HeatMap.DataPoint(rand.nextFloat(), rand.nextFloat(), rand.nextDouble() * 100.0);
-            heatMapImg.addData(point);
+        heatMapImg.setRadius(80.0);
+        Map<Float, Integer> colors = new ArrayMap<>();
+        //build a color gradient in HSV from red at the center to green at the outside
+        for (int i = 0; i < 21; i++) {
+            float stop = ((float)i) / 20.0f;
+            int color = doGradient(i * 5, 0, 100, 0xff00ff00, 0xffff0000);
+            colors.put(stop, color);
         }
+        heatMapImg.setColorStops(colors);
 
-        loadMap();
+
+//        Random rand = new Random();
+//        for (int i = 0; i < 20; i++) {
+//            float x =rand.nextFloat();
+//            float y =rand.nextFloat();
+//            ca.hss.heatmaplib.HeatMap.DataPoint point = new  ca.hss.heatmaplib.HeatMap.DataPoint(x, y, rand.nextDouble() * 100.0);
+//            heatMapImg.addData(point);
+//        }
 
 
         btnCoverageviewr.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +126,10 @@ public class HeatMap extends Fragment {
     public void changeMap(Mapa mapa){
         this.mapa = mapa;
         imgMapaCapturahm.setImageURI(Uri.parse(mapa.getImgMapa().toString()));
+        heatMapImg.getWidth();
+        heatMapImg.getHeight();
+        //heatMapImg.setLayoutParams(new ViewGroup.LayoutParams(imgMapaCapturahm.getLayoutParams()));
+        drawable = imgMapaCapturahm.getDrawable();
     }
 
     public void cargarMapa(){
@@ -117,21 +139,23 @@ public class HeatMap extends Fragment {
     public void setCoverageFilter(Mapa mapa, List<PointCoverage> pointCoverages){
         btnCoverageviewr.setText("Coverage Viewre T");
         int i = 0;
-
-//        while(i<pointCoverages.size()){
-//            ca.hss.heatmaplib.HeatMap.DataPoint point = new ca.hss.heatmaplib.HeatMap.DataPoint(pointCoverages.get(i).getCoordenada().getPixelx(),
-//                    pointCoverages.get(i).getCoordenada().getPixely(),pointCoverages.get(i).getAps());
-//            heatMapImg.addData(point);
-//            i++;
-//        }
+        while(i<pointCoverages.size()){
+            int aps =pointCoverages.get(i).getAps();
+            Integer x = pointCoverages.get(i).getCoordenada().getPixelx();
+            Integer y = pointCoverages.get(i).getCoordenada().getPixely();
+            float w = imgMapaCapturahm.getWidth();
+            float h = imgMapaCapturahm.getHeight();
+            float mw = imgMapaCapturahm.getMeasuredWidth();
+            float mh = imgMapaCapturahm.getMeasuredHeight();
+            float xx = x/mw;
+            float yy = y/mh;
+            ca.hss.heatmaplib.HeatMap.DataPoint point = new ca.hss.heatmaplib.HeatMap.DataPoint(xx, yy,aps*10);
+            heatMapImg.addData(point);
+            heatMapImg.refreshDrawableState();
+            heatMapImg.forceRefresh();
+            i++;
+        }
     }
-
-    public void loadMap(){
-
-    }
-
-
-
 
     public void inicializarAdaptador(){
 
@@ -176,5 +200,28 @@ public class HeatMap extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private static int doGradient(double value, double min, double max, int min_color, int max_color) {
+        if (value >= max) {
+            return max_color;
+        }
+        if (value <= min) {
+            return min_color;
+        }
+        float[] hsvmin = new float[3];
+        float[] hsvmax = new float[3];
+        float frac = (float)((value - min) / (max - min));
+        Color.RGBToHSV(Color.red(min_color), Color.green(min_color), Color.blue(min_color), hsvmin);
+        Color.RGBToHSV(Color.red(max_color), Color.green(max_color), Color.blue(max_color), hsvmax);
+        float[] retval = new float[3];
+        for (int i = 0; i < 3; i++) {
+            retval[i] = interpolate(hsvmin[i], hsvmax[i], frac);
+        }
+        return Color.HSVToColor(retval);
+    }
+
+    private static float interpolate(float a, float b, float proportion) {
+        return (a + ((b - a) * proportion));
     }
 }
