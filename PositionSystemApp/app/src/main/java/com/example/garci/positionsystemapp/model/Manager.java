@@ -109,59 +109,74 @@ public class Manager {
 
 
 
-    public List<BSSignalStatistics> getMuestrasByMedidaId(int medidaID, QualityCalculator qualityCalculator,AppRoomDatabase db) {
+    public void getMuestrasByMedidaId(final int medidaID, final List<APSignalStatistics> apSignalStatistics, QualityCalculator qualityCalculator, final AppRoomDatabase db, OnFinishListener listener) {
 
-        AsyncTask myAsynctask;
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
 
-
-        Medida medida = db.medidaDao().getMedidaById(medidaID);
-        int numMuestras = medida.getNumMuestras();
-
-        //listaMuestras en esa medida
-        List<Muestras> lstmuestras = db.muestrasDao().getMuestrasByMedidaId(medidaID);
-
-        List<Muestra> lstmuestra = new ArrayList<>();
-        for (Muestras ms:
-             lstmuestras) {
-           lstmuestra.addAll(db.muestraDao().getListaMuestras(ms.getMuestrasid()));
-        }
-
-        List<EstacionBase> lstEstacionBase = new ArrayList<>();
-        EstacionBase eb;
-        boolean saved = false;
-        for (Muestra m :
-                lstmuestra) {
-            eb = db.estacionBaseDao().getEstacionBase(m.getBsid());
-            if(!lstEstacionBase.contains(eb)){
-                lstEstacionBase.add(eb);
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
             }
 
-        }
+            @Override
+            public int run() {
+                Medida medida = db.medidaDao().getMedidaById(medidaID);
+                int numMuestras = medida.getNumMuestras();
 
-        List<BSSignalStatistics> bsSignalStatistics = null;
-        double mean;
-        double var;
-        double quality;
-        int id;
+                //listaMuestras en esa medida
+                List<Muestras> lstmuestras = db.muestrasDao().getMuestrasByMedidaId(medidaID);
 
-        List<Muestra> lstm = new ArrayList<>();
-
-        for (EstacionBase estacionBase :
-                lstEstacionBase) {
-            id = estacionBase.getBsid();
-            for (Muestra ma :
-                    lstmuestra) {
-                if (ma.getBsid() == id){
-                    lstm.add(ma);
+                List<Muestra> lstmuestra = new ArrayList<>();
+                for (Muestras ms:
+                        lstmuestras) {
+                    lstmuestra.addAll(db.muestraDao().getListaMuestras(ms.getMuestrasid()));
                 }
-            }
-            mean = utils.calcularMedia(lstm);
-            var = utils.calcularVarianza(lstm);
-            quality = utils.computeQuality(qualityCalculatorByRSSThreshold,lstmuestra, numMuestras);
-            bsSignalStatistics.add(new APSignalStatistics(estacionBase.getSsid(),estacionBase.getMac(),mean,var,quality));
-        }
 
-        return bsSignalStatistics;
+                List<EstacionBase> lstEstacionBase = new ArrayList<>();
+                EstacionBase eb;
+                boolean saved = false;
+                for (Muestra m :
+                        lstmuestra) {
+                    eb = db.estacionBaseDao().getEstacionBase(m.getBsid());
+                    if(!lstEstacionBase.contains(eb)){
+                        lstEstacionBase.add(eb);
+                    }
+
+                }
+
+                double mean;
+                double var;
+                double quality;
+                int id;
+
+                List<Muestra> lstm = new ArrayList<>();
+
+                for (EstacionBase estacionBase :
+                        lstEstacionBase) {
+                    id = estacionBase.getBsid();
+                    for (Muestra ma :
+                            lstmuestra) {
+                        if (ma.getBsid() == id){
+                            lstm.add(ma);
+                        }
+                    }
+                    mean = utils.calcularMedia(lstm);
+                    var = utils.calcularVarianza(lstm);
+                    quality = utils.computeQuality(qualityCalculatorByRSSThreshold,lstmuestra, numMuestras);
+                    apSignalStatistics.add(new APSignalStatistics(estacionBase.getSsid(),estacionBase.getMac(),mean,var,quality));
+                }
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return "saving map...";
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+
     }
 
 
@@ -295,6 +310,7 @@ public class Manager {
             public int run() {
                 medida.setFechaFin(new Date().toString());
                 int medidaid = (int) insertMedida(medida,db);
+                medida.setMedidaid(medidaid);
                 Medida medidaAux = db.medidaDao().getMedidaById(medidaid);
                 createMuestras(lstMuestraCap, medidaAux, db);
                 return 0;

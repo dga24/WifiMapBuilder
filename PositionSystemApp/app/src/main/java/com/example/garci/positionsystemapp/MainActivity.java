@@ -36,11 +36,15 @@ import com.example.garci.positionsystemapp.dataBase.DatabaseInitializer;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
+import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
+import com.example.garci.positionsystemapp.model.APSignalStatistics;
+import com.example.garci.positionsystemapp.model.BSSignalStatistics;
 import com.example.garci.positionsystemapp.model.ITask;
 import com.example.garci.positionsystemapp.model.Manager;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
 import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
+import com.example.garci.positionsystemapp.model.quality.QualityCalculator;
 
 import java.io.File;
 import java.io.IOException;
@@ -298,11 +302,32 @@ public class MainActivity extends AppCompatActivity
         wifiScan.execute();
     }
 
-    public void saveCapture(List<MuestraCapturada> lstMuestraCap, Parameters parameters){
-        manager.saveCapture(lstMuestraCap, parameters, coordenada, angle, db, new OnFinishListener() {
+    public void saveCapture(List<MuestraCapturada> lstMuestraCap, Parameters parameters, final Medida medida){
+
+        final List<APSignalStatistics> bsSignalStatistics = new ArrayList<>();
+        final QualityCalculator qualityCalculator = new QualityCalculator() {
+            @Override
+            public double compute(List<Muestra> muestras, long totalSamples) {
+                return 0;
+            }
+        };
+
+        manager.saveCapture(lstMuestraCap, coordenada, medida, db, new OnFinishListener() {
             @Override
             public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
-
+                manager.getMuestrasByMedidaId(medida.getMedidaid(), bsSignalStatistics, qualityCalculator, db, new OnFinishListener() {
+                    @Override
+                    public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                        manager.getMuestrasByMedidaId(medida.getMedidaid(), bsSignalStatistics, qualityCalculator, db, new OnFinishListener() {
+                            @Override
+                            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                                ResultsDialogFragment resultsDialogFragment = new ResultsDialogFragment();
+                                getSupportFragmentManager().beginTransaction().add(resultsDialogFragment,"result");
+                                resultsDialogFragment.inicializarAdaptador(bsSignalStatistics);
+                            }
+                        });
+                    }
+                });
             }
         });
     }

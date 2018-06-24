@@ -153,7 +153,7 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
         @Override
         protected void onPostExecute(Void result){
             pd.dismiss();
-            ((MainActivity)context).saveCapture(lstMuestraCap, parameters);
+            ((MainActivity)context).saveCapture(lstMuestraCap, parameters,medida);
         }
 
     private MuestraCapturada createMuestra(ScanResult scanResult, int num, int rep){
