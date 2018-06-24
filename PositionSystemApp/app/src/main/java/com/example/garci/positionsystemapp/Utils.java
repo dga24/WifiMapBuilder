@@ -7,6 +7,10 @@ import java.util.List;
 
 public class Utils {
 
+    static final int CARGAR_MAPA_PRECAPTURA=0;
+    static final int CARGARM_APA_HEATMAP=0;
+
+
     public double calcularMedia(List<Muestra> muestras){
         double sum = 0;
         for (Muestra muestra :

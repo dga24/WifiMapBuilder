@@ -43,6 +43,7 @@ import com.example.garci.positionsystemapp.model.Manager;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
 import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
+import com.example.garci.positionsystemapp.model.PointCoverage;
 import com.example.garci.positionsystemapp.model.quality.QualityCalculator;
 import com.example.garci.positionsystemapp.model.quality.QualityCalculatorByRSSThreshold;
 
@@ -217,6 +218,9 @@ public class MainActivity extends AppCompatActivity
                 mPreCaptura.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mPreCaptura).commit();
             }if(isHeatMap){
+                Bundle args = new Bundle();
+                args.putString("action", "cargarMapa");
+                mHeatMap.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mHeatMap).commit();
             }
             if(isGestor){
@@ -404,9 +408,36 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void cargarHeatMap(){
+        FragmentManager fm = getSupportFragmentManager();
+        final CargarMapaHeatMap cargarMapaHeatMap = new CargarMapaHeatMap();
+        cargarMapaHeatMap.show(fm, "Sample Fragment");
+        final List<Mapa> mapas = new ArrayList<>();
+        manager.getAllMapas(db,mapas, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                cargarMapaHeatMap.inicializarAdaptador(mapas,context,getSupportFragmentManager());
+            }
+        });
+    }
+
+
     public Mapa getMapa(int mapaid){
         final Mapa mapa = null;
         return manager.getMapa(mapaid,db);
+    }
+
+
+    public void coverageFilter(final Mapa mapa, final Context context){
+        final List<PointCoverage> pointCoverages = new ArrayList<>();
+        manager.coverageView(mapa.getMapaid(), pointCoverages, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                HeatMap mHeatMap = (HeatMap) getSupportFragmentManager().getFragments().get(0);
+                mHeatMap.setCoverageFilter(mapa,pointCoverages);
+            }
+        });
+
     }
 
 }

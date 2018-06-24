@@ -9,10 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.garci.positionsystemapp.adapter.SeñalAdapter;
+import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.model.APSignalStatistics;
+import com.example.garci.positionsystemapp.model.PointCoverage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +33,16 @@ public class HeatMap extends Fragment {
     private List<APSignalStatistics> signals;
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
-    ImageView imgMapaCapturahm;
+    private ImageView imgMapaCapturahm;
 
-    private ca.hss.heatmaplib.HeatMap heatMap;
+    private Button btnQualityViewer;
+    private Button btnCoverageviewr;
+
+    private ca.hss.heatmaplib.HeatMap heatMapImg;
 
     private OnFragmentInteractionListener mListener;
+
+    private Mapa mapa;
 
     public HeatMap() {
         // Required empty public constructor
@@ -51,29 +59,77 @@ public class HeatMap extends Fragment {
         recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvLista);
         recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
         imgMapaCapturahm = (ImageView) view.findViewById(R.id.imgMapaCapturahm);
-        heatMap = (ca.hss.heatmaplib.HeatMap) view.findViewById(R.id.heatmapImg);
+        btnQualityViewer = (Button) view.findViewById(R.id.btnQualityViewer);
+        btnCoverageviewr = (Button)view.findViewById(R.id.btnCoverageviewr);
+        heatMapImg = (ca.hss.heatmaplib.HeatMap) view.findViewById(R.id.heatmapImg);
         int hh =imgMapaCapturahm.getDrawable().getIntrinsicWidth();
         int hhh =imgMapaCapturahm.getDrawable().getIntrinsicHeight();
-        heatMap.setMinimum(10);
-        heatMap.setMaximum(100.0);
+        heatMapImg.setMinimum(10);
+        heatMapImg.setMaximum(100.0);
         Random rand = new Random();
         for (int i = 0; i < 20; i++) {
-            ca.hss.heatmaplib.HeatMap.DataPoint point = new ca.hss.heatmaplib.HeatMap.DataPoint(rand.nextFloat(), rand.nextFloat(), rand.nextDouble() * 100.0);
-            heatMap.addData(point);
+            ca.hss.heatmaplib.HeatMap.DataPoint point = new  ca.hss.heatmaplib.HeatMap.DataPoint(rand.nextFloat(), rand.nextFloat(), rand.nextDouble() * 100.0);
+            heatMapImg.addData(point);
         }
 
-        data();
-        inicializarAdaptador();
+        loadMap();
+
+
+        btnCoverageviewr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).coverageFilter(mapa,getContext());
+            }
+        });
+
+        btnQualityViewer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        if(getArguments() != null) {
+            if ((getArguments().getString("action").equals("comprovarMapa"))) {//se acaba de crear/abrir un nuevo mapa -> cargar mapa y pantalla para indicar Origen
+                int id = (getArguments().getInt("mapaid"));
+                mapa = ((MainActivity) getActivity()).getMapa(id);
+                changeMap(mapa);
+            }
+            if ((getArguments().getString("action").equals("cargarMapa"))) { //abrir dialog cargarMapa
+                cargarMapa();
+            }
+        }
+
+//        data();
+//        inicializarAdaptador();
         return view;
     }
 
-    public void data(){
-        signals.add(new APSignalStatistics("ssid1","aa:ff:ff:ff",5,3,1));
-        signals.add(new APSignalStatistics("ssid2","bb:ff:ff:ff",5,3,1));
-        signals.add(new APSignalStatistics("ssid3","bb:ff:ff:ff",5,3,1));
-        signals.add(new APSignalStatistics("ssid4","bb:ff:ff:ff",5,3,1));
+    public void changeMap(Mapa mapa){
+        this.mapa = mapa;
+        imgMapaCapturahm.setImageURI(Uri.parse(mapa.getImgMapa().toString()));
+    }
+
+    public void cargarMapa(){
+        ((MainActivity)getActivity()).cargarHeatMap();
+    }
+
+    public void setCoverageFilter(Mapa mapa, List<PointCoverage> pointCoverages){
+        btnCoverageviewr.setText("Coverage Viewre T");
+        int i = 0;
+
+//        while(i<pointCoverages.size()){
+//            ca.hss.heatmaplib.HeatMap.DataPoint point = new ca.hss.heatmaplib.HeatMap.DataPoint(pointCoverages.get(i).getCoordenada().getPixelx(),
+//                    pointCoverages.get(i).getCoordenada().getPixely(),pointCoverages.get(i).getAps());
+//            heatMapImg.addData(point);
+//            i++;
+//        }
+    }
+
+    public void loadMap(){
 
     }
+
 
 
 

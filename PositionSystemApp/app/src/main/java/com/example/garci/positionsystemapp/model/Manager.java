@@ -247,6 +247,40 @@ public class Manager {
     }
 
 
+    public void coverageView(final int mapaid, final List<PointCoverage> pointsCoverages, final AppRoomDatabase db, OnFinishListener listener){
+
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
+        final List<Medida> medidas = new ArrayList<>();
+
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
+            }
+
+            @Override
+            public int run() {
+                medidas.addAll(db.medidaDao().getMedidasByMapaId(mapaid));
+                for (Medida me:
+                        medidas) {
+                    Coordenada coor= db.coordenadaDao().getCoordenada(me.getPosicionid());
+                    int nAps = getNumberApsinMedida(me,db);
+                    pointsCoverages.add(new PointCoverage(coor, nAps));
+                }
+                Log.d("DB", "Mapa creado");
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return "saving map...";
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+    }
+
+
     public Mapa getMapa(final int mapaid, final AppRoomDatabase db){
         return db.mapadao().getMapa(mapaid);
     }
@@ -280,6 +314,39 @@ public class Manager {
     }
 
 
+    public int getNumberApsinMedida(Medida medida,AppRoomDatabase db){
+
+        int numMuestras = medida.getNumMuestras();
+
+        //listaMuestras en esa medida
+        List<Muestras> lstmuestras = db.muestrasDao().getMuestrasByMedidaId(medida.getMedidaid());
+
+        List<Muestra> lstmuestra = new ArrayList<>();
+        for (Muestras ms:
+                lstmuestras) {
+            lstmuestra.addAll(db.muestraDao().getListaMuestras(ms.getMuestrasid()));
+        }
+        List<EstacionBase> lstEstacionBase = new ArrayList<>();
+        EstacionBase eb;
+        boolean contains = false;
+        boolean saved = false;
+        for (Muestra m :
+                lstmuestra) {
+            eb = db.estacionBaseDao().getEstacionBase(m.getBsid());
+            contains=false;
+            for (EstacionBase ebaux :
+                    lstEstacionBase) {
+                if(ebaux.getBsid()==eb.getBsid()){
+                    contains=true;
+                    break;
+                }
+            }
+            if(!contains){
+                lstEstacionBase.add(eb);
+            }
+        }
+        return lstEstacionBase.size();
+    }
 
     public void createListBs(final List<EstacionBase> bs, final AppRoomDatabase db, OnFinishListener listener){
         MyAsyncTask myAsyncTask = new MyAsyncTask(context);

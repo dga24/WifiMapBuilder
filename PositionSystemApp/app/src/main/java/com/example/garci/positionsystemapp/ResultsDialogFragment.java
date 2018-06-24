@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.garci.positionsystemapp.adapter.SeñalAdapter;
 import com.example.garci.positionsystemapp.model.APSignalStatistics;
@@ -26,6 +27,7 @@ public class ResultsDialogFragment extends DialogFragment {
     //private List<APSignalStatistics> signals;
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
+    private Button btnAceptarResults;
 
 
     public ResultsDialogFragment() {
@@ -42,9 +44,18 @@ public class ResultsDialogFragment extends DialogFragment {
         //signals = new ArrayList<>();
         recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvListaSignalsPostCaptura);
         recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
+        btnAceptarResults = (Button) view.findViewById(R.id.btnAceptarResult);
 
+        btnAceptarResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         return view;
     }
+
+
 
 
     public void inicializarAdaptador(List<APSignalStatistics> signals){
