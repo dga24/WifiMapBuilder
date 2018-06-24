@@ -35,6 +35,7 @@ import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
 import com.example.garci.positionsystemapp.dataBase.DatabaseInitializer;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
+import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.model.ITask;
 import com.example.garci.positionsystemapp.model.Manager;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
@@ -286,14 +287,14 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, PERMS_INITIAL, 127);
     }
 
-    public void startScan(Parameters parameters, Coordenada coordenada, int angle) {
+    public void startScan(Parameters parameters, Medida medida, Coordenada coordenada, int angle) {
         this.coordenada= coordenada;
         this.angle = angle;
         final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager.isWifiEnabled() == false) {
             wifiManager.setWifiEnabled(true);
         }
-        final WifiScan wifiScan = new WifiScan(parameters, wifiManager,context);
+        final WifiScan wifiScan = new WifiScan(parameters, medida, wifiManager,context);
         wifiScan.execute();
     }
 
@@ -326,7 +327,7 @@ public class MainActivity extends AppCompatActivity
             public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
                 Toast toast = Toast.makeText(context, "Guardado coordenada Origen ", Toast.LENGTH_SHORT);
                 toast.show();
-                mPreCaptura.changeMap(mapa);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,new PreCaptura()).commit();
             }
         });
     }

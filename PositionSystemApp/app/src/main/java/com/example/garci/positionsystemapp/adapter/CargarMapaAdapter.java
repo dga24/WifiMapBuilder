@@ -3,6 +3,7 @@ package com.example.garci.positionsystemapp.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -99,9 +100,9 @@ public class CargarMapaAdapter extends RecyclerView.Adapter<CargarMapaAdapter.Ca
 
     public void newPreCaptura(int mapaid) {
         PreCaptura preCaptura = new PreCaptura();
-        fragmentManager.beginTransaction().replace(R.id.fragment_pre_captura,preCaptura).commit();
-        dialog.dismiss();
+        fragmentManager.beginTransaction().replace(R.id.content_main,preCaptura).commit();
         //fragmentManager.beginTransaction().add(preCaptura,"precaptura").commit();
+        dialog.dismiss();
         Bundle args = new Bundle();
         args.putInt("mapaid", mapaid);
         preCaptura.setArguments(args);

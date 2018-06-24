@@ -3,13 +3,13 @@ package com.example.garci.positionsystemapp.model;
 public class MuestraCapturada {
 
     private double valor;
-    private int nummuestra;
-    private int repeticion;
+    private Integer nummuestra;
+    private Integer repeticion;
     private String bssid;
     private String ssid;
     private String tipo;
 
-    public MuestraCapturada(double valor, int nummuestra, int repeticion, String bssid, String ssid, String tipo) {
+    public MuestraCapturada(double valor, Integer nummuestra, Integer repeticion, String bssid, String ssid, String tipo) {
         this.valor = valor;
         this.nummuestra = nummuestra;
         this.repeticion = repeticion;
@@ -26,19 +26,19 @@ public class MuestraCapturada {
         this.valor = valor;
     }
 
-    public int getNummuestra() {
+    public Integer getNummuestra() {
         return nummuestra;
     }
 
-    public void setNummuestra(int nummuestra) {
+    public void setNummuestra(Integer nummuestra) {
         this.nummuestra = nummuestra;
     }
 
-    public int getRepeticion() {
+    public Integer getRepeticion() {
         return repeticion;
     }
 
-    public void setRepeticion(int repeticion) {
+    public void setRepeticion(Integer repeticion) {
         this.repeticion = repeticion;
     }
 

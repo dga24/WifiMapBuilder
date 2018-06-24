@@ -50,7 +50,7 @@ android:padding="5dp">
 
 
             <TextView
-                android:id="@+id/tvWifiScan"
+                android:id="@+id/tvWifiScanPreCaptura"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </ScrollView>
@@ -96,7 +96,7 @@ android:padding="5dp">
         <EditText
             android:id="@+id/editMuestras"
             style="@style/Param"
-            android:text="100"
+            android:text="2"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textMuestras" />
@@ -118,7 +118,7 @@ android:padding="5dp">
             android:layout_height="wrap_content"
             android:layout_marginStart="110dp"
             android:inputType="numberDecimal"
-            android:text="0.001"
+            android:text="400"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPeriodo" />
 
@@ -139,7 +139,7 @@ android:padding="5dp">
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:inputType="numberDecimal"
-            android:text="3"
+            android:text="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textRepeticiones" />
 
@@ -160,7 +160,7 @@ android:padding="5dp">
             android:layout_height="wrap_content"
             android:layout_marginStart="112dp"
             android:inputType="numberDecimal"
-            android:text="10"
+            android:text="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTiempo" />
 

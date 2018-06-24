@@ -69,6 +69,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimaryLight"
+            android:text="0"
             android:hint="X"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -83,6 +84,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimaryLight"
+            android:text="0"
             android:hint="Y"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -114,13 +116,14 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimaryLight"
             android:inputType="numberDecimal"
+            android:text="90"
             android:hint="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/editZ"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btnSelect"
+            android:id="@+id/btnSelectPreCaptura"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

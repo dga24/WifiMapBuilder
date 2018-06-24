@@ -13,9 +13,11 @@ import android.util.Log;
 
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.EstacionBase;
+import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
 import com.example.garci.positionsystemapp.model.Parameters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Condition;
@@ -41,9 +43,11 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
         private List<MuestraCapturada> lstMuestraCap;
         private Coordenada coordenada;
         private int angle;
+        private Medida medida;
 
 
-    public WifiScan(Parameters parameters, WifiManager wifiManager,Context context) {
+    public WifiScan(Parameters parameters, Medida medida, WifiManager wifiManager, Context context) {
+            this.medida = medida;
             this.parameters = parameters;
             this.wifiManager = wifiManager;
             this.context = context;
@@ -55,7 +59,9 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
 
     @Override
         protected void onPreExecute() {
+        lstMuestraCap = new ArrayList<>();
             pd =new ProgressDialog(context);
+            mTotalSamples = parameters.getNumSample();
             pd.setMessage("Wifi scan [0/" + mTotalSamples + "]");
             // Maybe it's worthy to include a spinner here
             pd.setIndeterminate(false);
@@ -135,7 +141,6 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
             }
             finally {
                 mLock.unlock();
-                ((MainActivity)context).saveCapture(lstMuestraCap, parameters);
             }
             return null;
         }
@@ -148,16 +153,11 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
         @Override
         protected void onPostExecute(Void result){
             pd.dismiss();
+            ((MainActivity)context).saveCapture(lstMuestraCap, parameters);
         }
 
     private MuestraCapturada createMuestra(ScanResult scanResult, int num, int rep){
-        MuestraCapturada muestra = null;
-        muestra.setBssid(scanResult.BSSID);
-        muestra.setRepeticion(rep);
-        muestra.setSsid(scanResult.SSID);
-        muestra.setTipo("WIFI");
-        muestra.setValor(scanResult.level);
-        muestra.setNummuestra(num);
+        MuestraCapturada muestra = new MuestraCapturada(scanResult.level,num,rep,scanResult.BSSID,scanResult.SSID,"WIFI");
         return muestra;
     }
 

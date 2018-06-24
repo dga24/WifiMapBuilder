@@ -18,19 +18,19 @@ import java.sql.Date;
 public class Medida {
 
     @PrimaryKey(autoGenerate = true)
-    private int medidaid;
-    private int posicionid;
-    private int angulo;
-    private int mapaid;
+    private Integer medidaid;
+    private Integer posicionid;
+    private Integer angulo;
+    private Integer mapaid;
     private String fechaInicio;
     private String fechaFin;
     private double periodo;
-    private int repeticiones;
+    private Integer repeticiones;
     private double tiempo;
-    private int numMuestras;
+    private Integer numMuestras;
 
 
-    public Medida(int posicionid, int angulo, int mapaid, String fechaInicio, String fechaFin, double periodo, int repeticiones, double tiempo, int numMuestras) {
+    public Medida(Integer posicionid, Integer angulo, Integer mapaid, String fechaInicio, String fechaFin, double periodo, Integer repeticiones, double tiempo, Integer numMuestras) {
         this.posicionid = posicionid;
         this.angulo = angulo;
         this.mapaid = mapaid;
@@ -42,35 +42,35 @@ public class Medida {
         this.numMuestras = numMuestras;
     }
 
-    public int getMedidaid() {
+    public Integer getMedidaid() {
         return medidaid;
     }
 
-    public void setMedidaid(int medidaid) {
+    public void setMedidaid(Integer medidaid) {
         this.medidaid = medidaid;
     }
 
-    public int getPosicionid() {
+    public Integer getPosicionid() {
         return posicionid;
     }
 
-    public void setPosicionid(int posicionid) {
+    public void setPosicionid(Integer posicionid) {
         this.posicionid = posicionid;
     }
 
-    public int getAngulo() {
+    public Integer getAngulo() {
         return angulo;
     }
 
-    public void setAngulo(int angulo) {
+    public void setAngulo(Integer angulo) {
         this.angulo = angulo;
     }
 
-    public int getMapaid() {
+    public Integer getMapaid() {
         return mapaid;
     }
 
-    public void setMapaid(int mapaid) {
+    public void setMapaid(Integer mapaid) {
         this.mapaid = mapaid;
     }
 
@@ -98,11 +98,11 @@ public class Medida {
         this.periodo = periodo;
     }
 
-    public int getRepeticiones() {
+    public Integer getRepeticiones() {
         return repeticiones;
     }
 
-    public void setRepeticiones(int repeticiones) {
+    public void setRepeticiones(Integer repeticiones) {
         this.repeticiones = repeticiones;
     }
 
@@ -114,7 +114,7 @@ public class Medida {
         this.tiempo = tiempo;
     }
 
-    public int getNumMuestras() { return numMuestras; }
+    public Integer getNumMuestras() { return numMuestras; }
 
-    public void setNumMuestras(int numMuestras) { this.numMuestras = numMuestras; }
+    public void setNumMuestras(Integer numMuestras) { this.numMuestras = numMuestras; }
 }

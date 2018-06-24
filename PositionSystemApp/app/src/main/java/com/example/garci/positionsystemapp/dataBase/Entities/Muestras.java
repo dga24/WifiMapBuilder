@@ -10,37 +10,37 @@ import android.arch.persistence.room.PrimaryKey;
 public class Muestras {
 
     @PrimaryKey(autoGenerate = true)
-    private int muestrasid;
-    private int medidaid;
-    private int repeticion;
+    private Integer muestrasid;
+    private Integer medidaid;
+    private Integer repeticion;
 
-    public Muestras(int medidaid, int repeticion) {
+    public Muestras(Integer medidaid, int repeticion) {
         this.medidaid = medidaid;
         this.repeticion = repeticion;
     }
 
 
-    public int getMuestrasid() {
+    public Integer getMuestrasid() {
         return muestrasid;
     }
 
-    public void setMuestrasid(int muestrasid) {
+    public void setMuestrasid(Integer muestrasid) {
         this.muestrasid = muestrasid;
     }
 
-    public int getMedidaid() {
+    public Integer getMedidaid() {
         return medidaid;
     }
 
-    public void setMedidaid(int medidaid) {
+    public void setMedidaid(Integer medidaid) {
         this.medidaid = medidaid;
     }
 
-    public int getRepeticion() {
+    public Integer getRepeticion() {
         return repeticion;
     }
 
-    public void setRepeticion(int repeticion) {
+    public void setRepeticion(Integer repeticion) {
         this.repeticion = repeticion;
     }
 

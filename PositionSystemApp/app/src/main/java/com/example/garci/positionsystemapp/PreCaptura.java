@@ -1,21 +1,16 @@
 package com.example.garci.positionsystemapp;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Layout;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,20 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.garci.positionsystemapp.dataBase.AppRoomDatabase;
 import com.example.garci.positionsystemapp.dataBase.Entities.Coordenada;
 import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
-import com.example.garci.positionsystemapp.model.ITask;
+import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.model.Manager;
-import com.example.garci.positionsystemapp.model.MuestraCapturada;
-import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
 
-import java.io.BufferedReader;
-import java.util.List;
+
+import java.util.Date;
+
+import static android.graphics.Paint.Style.STROKE;
 
 
 /**
@@ -68,6 +62,7 @@ public class PreCaptura extends Fragment {
     EditText txtAng;
     Button btnSelect;
     ImageView imgMapaCaptura;
+    Button btnSelectPreCaptura;
 
     TextView tvPixelX;
     TextView tvPixelY;
@@ -86,7 +81,7 @@ public class PreCaptura extends Fragment {
 
     Canvas canvas;
 
-    Paint mPaint;
+    Paint paint;
 
     boolean haveCoor0 = true;
 
@@ -99,6 +94,8 @@ public class PreCaptura extends Fragment {
     TextView tvParamPixelX;
     TextView tvParamPixelY;
     Button btnguardarCoordenadaOrigen;
+
+    Medida medida;
 
     boolean existmapa = true;
 
@@ -119,8 +116,8 @@ public class PreCaptura extends Fragment {
         txtY = (EditText) view.findViewById(R.id.editY);
         txtZ = (EditText) view.findViewById(R.id.editZ);
         txtAng = (EditText) view.findViewById(R.id.editAng);
-        btnSelect = (Button) view.findViewById(R.id.btnSelect);
         imgMapaCaptura = (ImageView) view.findViewById(R.id.imgMapaCaptura);
+        btnSelectPreCaptura = (Button) view.findViewById(R.id.btnSelectPreCaptura);
 
         tvPixelX = (TextView) view.findViewById(R.id.tvPixelX);
         tvPixelY = (TextView) view.findViewById(R.id.tvPixelY);
@@ -130,6 +127,7 @@ public class PreCaptura extends Fragment {
         editRepeticiones = (EditText) view.findViewById(R.id.editRepeticiones);
         editTiempo = (EditText) view.findViewById(R.id.editTiempo);
         btnStartCaptura = (Button) view.findViewById(R.id.btnStartCaptura);
+        btnStartCaptura.setEnabled(false);
 
         tvWifiScan = (TextView) view.findViewById(R.id.tvWifiScan);
         btnRefreshScan = (Button) view.findViewById(R.id.btnRefreshScan);
@@ -147,16 +145,39 @@ public class PreCaptura extends Fragment {
         tvParamPixelY = (TextView) view.findViewById(R.id.tvParamPixelY);
 
 
-        manager = ((MainActivity) getActivity()).getManager();
-        db = ((MainActivity) getActivity()).getDb();
-
         if(getArguments() != null) {    //se acaba de crear un nuevo mapa -> cargar mapa y pantalla para indicar Origen
             int id = (getArguments().getInt("mapaid"));
             Mapa mapaAux = ((MainActivity)getActivity()).getMapa(id);
             changeMap(mapaAux);
+        }if(mapa!=null){
+            changeMap(mapa);
         }else{
             cargarMapa();
         }
+
+        btnSelectPreCaptura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!txtX.getText().toString().equals("")&&!txtY.getText().toString().equals("")&&!txtZ.getText().toString().equals("")
+                        &&!txtAng.getText().toString().equals("")
+                        &&pixelX!=0&&pixelY!=0) {
+                    coordenada = new Coordenada(mapa.getMapaid(), Double.parseDouble(txtX.getText().toString()),
+                            Double.parseDouble(txtY.getText().toString()),
+                            Double.parseDouble(txtZ.getText().toString()),
+                            pixelX, pixelY);
+                    angle = Integer.parseInt(txtAng.getText().toString());
+                    txtX.setEnabled(false);
+                    txtY.setEnabled(false);
+                    txtZ.setEnabled(false);
+                    txtAng.setEnabled(false);
+                    tvPixelX.setTextSize(18);
+                    tvPixelX.setTextColor(Color.GREEN);
+                    tvPixelY.setTextColor(Color.GREEN);
+                    tvPixelY.setTextSize(18);
+                    btnStartCaptura.setEnabled(true);
+                }
+            }
+        });
 
 
 
@@ -174,49 +195,68 @@ public class PreCaptura extends Fragment {
                 cargarMapa();
             }
         });
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(Color.BLUE);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(8);
+        paint = new Paint(paint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLUE);
+        paint.setStrokeWidth(15);
+        paint.setStyle(STROKE);
+
+
+
+        final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
+        Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        canvas = new Canvas(mutableBitmap);
 
         btnStartCaptura.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                coordenada = new Coordenada(mapa.getMapaid(), Double.parseDouble(txtX.getText().toString()),
-                                            Double.parseDouble(txtY.getText().toString()),
-                                            Double.parseDouble(txtZ.getText().toString()),
-                                            pixelX,pixelY);
-                angle = Integer.parseInt(txtAng.getText().toString());
+
                 startCaptura();
             }
         });
 
-        canvas = new Canvas();
+
         imgMapaCaptura.setOnTouchListener(new View.OnTouchListener(){
-            final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
             @Override
             public boolean onTouch(View v, MotionEvent event){
-                pixelX = (int)event.getRawX();
-                pixelY = (int)event.getRawY();
-                //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
-                tvPixelX.setText(String.valueOf(pixelX));
-                tvPixelY.setText(String.valueOf(pixelY));
-                tvParamPixelX.setText(String.valueOf(pixelX));
-                tvParamPixelY.setText(String.valueOf(pixelY));
-                if (mapa!=null) {
-                    coordenada = new Coordenada(mapa.getMapaid(), Double.valueOf(txtX.getText().toString()),
-                            Double.valueOf(txtY.getText().toString()),
-                            Double.valueOf(txtZ.getText().toString()),
-                            pixelX, pixelY);
-                    canvas.drawPoint(pixelX, pixelY, mPaint);
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        pixelX = (int)event.getRawX();
+                        pixelY = (int)event.getRawY();
+                        //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
+                        tvPixelX.setText(String.valueOf(pixelX));
+                        tvPixelY.setText(String.valueOf(pixelY));
+                        tvParamPixelX.setText(String.valueOf(pixelX));
+                        tvParamPixelY.setText(String.valueOf(pixelY));
+                        canvas.drawBitmap(bitmap, 0, 0, paint);
+                        canvas.drawCircle(pixelX, pixelY,100, paint);
                 }
                 return true;
             }
         });
 
+
+
+//        imgMapaCaptura.setOnTouchListener(new View.OnTouchListener(){
+//            final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event){
+//                pixelX = (int)event.getRawX();
+//                pixelY = (int)event.getRawY();
+//                //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
+//                tvPixelX.setText(String.valueOf(pixelX));
+//                tvPixelY.setText(String.valueOf(pixelY));
+//                tvParamPixelX.setText(String.valueOf(pixelX));
+//                tvParamPixelY.setText(String.valueOf(pixelY));
+//                canvas.drawBitmap(bitmap, 0, 0, paint);
+//                canvas.drawCircle(pixelX, pixelY,100, paint);
+//                return true;
+//            }
+//        });
+
         btnguardarCoordenadaOrigen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                coordenada = new Coordenada(mapa.getMapaid(), 0,0,0, pixelX, pixelY);
                 ((MainActivity)getActivity()).createCoorOrigen(mapa,coordenada);
             }
         });
@@ -249,7 +289,9 @@ public class PreCaptura extends Fragment {
                                 Integer.valueOf(editRepeticiones.getText().toString()),
                                 Double.parseDouble(editTiempo.getText().toString()),
                                 Integer.valueOf(editMuestras.getText().toString()));
-        ((MainActivity)getActivity()).startScan(parameters, coordenada, angle);
+        medida = new Medida(null,angle,mapa.getMapaid(), new Date().toString(),null,
+                parameters.getPeriod(),parameters.getRep(),parameters.getTemp(),parameters.getNumSample());
+        ((MainActivity)getActivity()).startScan(parameters, medida, coordenada, angle);
     }
 
     public void showAcceptNewMap(Mapa mapa){
@@ -285,13 +327,13 @@ public class PreCaptura extends Fragment {
             txtY.setEnabled(false);
             paramPreCaptura.setVisibility(View.GONE);
             newMapaParam.setVisibility(View.VISIBLE);
-            btnSelect.setVisibility(View.INVISIBLE);
+            btnSelectPreCaptura.setVisibility(View.GONE);
         }
         else{
             haveCoor0=true;
             paramPreCaptura.setVisibility(View.VISIBLE);
             newMapaParam.setVisibility(View.GONE);
-            btnSelect.setVisibility(View.VISIBLE);
+            btnSelectPreCaptura.setVisibility(View.VISIBLE);
             txtX.setEnabled(true);
             txtY.setEnabled(true);
         }

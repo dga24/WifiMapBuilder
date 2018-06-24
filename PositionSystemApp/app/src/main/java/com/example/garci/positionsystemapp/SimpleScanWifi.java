@@ -55,7 +55,7 @@ public class SimpleScanWifi extends AsyncTask<Void, Void, String> {
 
     protected void onPostExecute(String infowifi){
         pDialog.dismiss();
-        TextView tvList = (TextView) activity.findViewById(R.id.tvWifiScan);
+        TextView tvList = (TextView) activity.findViewById(R.id.tvWifiScanPreCaptura);
         tvList.setText(infowifi);
     }
 }
