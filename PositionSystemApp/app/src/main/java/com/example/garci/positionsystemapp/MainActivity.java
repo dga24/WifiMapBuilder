@@ -44,6 +44,7 @@ import com.example.garci.positionsystemapp.model.MuestraCapturada;
 import com.example.garci.positionsystemapp.model.OnFinishListener;
 import com.example.garci.positionsystemapp.model.Parameters;
 import com.example.garci.positionsystemapp.model.quality.QualityCalculator;
+import com.example.garci.positionsystemapp.model.quality.QualityCalculatorByRSSThreshold;
 
 import java.io.File;
 import java.io.IOException;
@@ -335,12 +336,10 @@ public class MainActivity extends AppCompatActivity
     public void saveCapture(List<MuestraCapturada> lstMuestraCap, Parameters parameters, final Medida medida){
 
         final List<APSignalStatistics> bsSignalStatistics = new ArrayList<>();
-        final QualityCalculator qualityCalculator = new QualityCalculator() {
-            @Override
-            public double compute(List<Muestra> muestras, long totalSamples) {
-                return 0;
-            }
-        };
+        final QualityCalculatorByRSSThreshold qualityCalculator = new QualityCalculatorByRSSThreshold();
+        final FragmentManager fm = getSupportFragmentManager();
+        final ResultsDialogFragment resultsDialogFragment = new ResultsDialogFragment();
+        resultsDialogFragment.show(fm,"resultDialog");
 
         manager.saveCapture(lstMuestraCap, coordenada, medida, db, new OnFinishListener() {
             @Override
@@ -348,14 +347,7 @@ public class MainActivity extends AppCompatActivity
                 manager.getMuestrasByMedidaId(medida.getMedidaid(), bsSignalStatistics, qualityCalculator, db, new OnFinishListener() {
                     @Override
                     public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
-                        manager.getMuestrasByMedidaId(medida.getMedidaid(), bsSignalStatistics, qualityCalculator, db, new OnFinishListener() {
-                            @Override
-                            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
-                                ResultsDialogFragment resultsDialogFragment = new ResultsDialogFragment();
-                                getSupportFragmentManager().beginTransaction().add(resultsDialogFragment,"result");
-                                resultsDialogFragment.inicializarAdaptador(bsSignalStatistics);
-                            }
-                        });
+                        resultsDialogFragment.inicializarAdaptador(bsSignalStatistics);
                     }
                 });
             }

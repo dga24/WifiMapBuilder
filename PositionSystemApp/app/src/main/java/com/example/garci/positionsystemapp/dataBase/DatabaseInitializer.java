@@ -30,17 +30,17 @@ public class DatabaseInitializer {
 
 
     private static void populateWithTestData(AppRoomDatabase db) {
-        EstacionBase bs = new EstacionBase("WLAN_TEST-DB","FF:FF:FF:FF:FF:FF","WIFI");
-        Mapa mapa = new Mapa("Test","Test",0,"url",null);
-        long mapaid = db.mapadao().createMapa(mapa);
-        Coordenada coor = new Coordenada((int) mapaid,0,0,0,0,0);
-        db.coordenadaDao().insertCoordenada(coor);
-        db.estacionBaseDao().createEstacionBase(bs);
-        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.estacionBaseDao().getAllEstacionBase().get(0).getSsid().toString());
-        int size =db.coordenadaDao().getAllCoordenadas().size();
-        List<Coordenada> coordenadas = db.coordenadaDao().getAllCoordenadas();
-        Log.d(DatabaseInitializer.TAG, "Coordenada insertada:          " + db.coordenadaDao().getAllCoordenadas().size());
-        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.mapadao().getMapa(1).getNombre().toString());
+//        EstacionBase bs = new EstacionBase("WLAN_TEST-DB","FF:FF:FF:FF:FF:FF","WIFI");
+//        Mapa mapa = new Mapa("Test","Test",0,"url",null);
+//        long mapaid = db.mapadao().createMapa(mapa);
+//        Coordenada coor = new Coordenada((int) mapaid,0,0,0,0,0);
+//        db.coordenadaDao().insertCoordenada(coor);
+//        db.estacionBaseDao().createEstacionBase(bs);
+//        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.estacionBaseDao().getAllEstacionBase().get(0).getSsid().toString());
+//        int size =db.coordenadaDao().getAllCoordenadas().size();
+//        List<Coordenada> coordenadas = db.coordenadaDao().getAllCoordenadas();
+//        Log.d(DatabaseInitializer.TAG, "Coordenada insertada:          " + db.coordenadaDao().getAllCoordenadas().size());
+//        Log.d(DatabaseInitializer.TAG, "WLAN insertada:          " + db.mapadao().getMapa(1).getNombre().toString());
     }
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {

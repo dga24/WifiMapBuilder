@@ -15,10 +15,11 @@ import android.arch.persistence.room.PrimaryKey;
 public class Muestra {
 
     @PrimaryKey(autoGenerate = true)
-    private Integer muestrasid;
+    private int muestraid;
+    private int muestrasid;
     private double valor;
-    private Integer nummuestra;
-    private Integer bsid;
+    private int nummuestra;
+    private int bsid;
 
 
     public Muestra(int muestrasid, double valor, Integer nummuestra, Integer bsid) {
@@ -28,11 +29,19 @@ public class Muestra {
         this.bsid = bsid;
     }
 
-    public Integer getMuestrasid() {
+    public int getMuestraid() {
+        return muestraid;
+    }
+
+    public void setMuestraid(int muestraid) {
+        this.muestraid = muestraid;
+    }
+
+    public int getMuestrasid() {
         return muestrasid;
     }
 
-    public void setMuestrasid(Integer muestrasid) {
+    public void setMuestrasid(int muestrasid) {
         this.muestrasid = muestrasid;
     }
 
@@ -44,15 +53,15 @@ public class Muestra {
         this.valor = valor;
     }
 
-    public Integer getNummuestra() {
+    public int getNummuestra() {
         return nummuestra;
     }
 
-    public void setNummuestra(Integer nummuestra) {
+    public void setNummuestra(int nummuestra) {
         this.nummuestra = nummuestra;
     }
 
-    public Integer getBsid() { return bsid; }
+    public int getBsid() { return bsid; }
 
-    public void setBsid(Integer bsid) { this.bsid = bsid; }
+    public void setBsid(int bsid) { this.bsid = bsid; }
 }

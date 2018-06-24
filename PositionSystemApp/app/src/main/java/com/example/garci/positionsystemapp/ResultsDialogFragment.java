@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class ResultsDialogFragment extends DialogFragment {
 
-    private List<APSignalStatistics> signals;
+    //private List<APSignalStatistics> signals;
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
 
@@ -39,7 +39,7 @@ public class ResultsDialogFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_results_dialog, container, false);
 
-        signals = new ArrayList<>();
+        //signals = new ArrayList<>();
         recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvListaSignalsPostCaptura);
         recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
 

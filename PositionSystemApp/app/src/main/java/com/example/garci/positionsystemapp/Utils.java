@@ -18,6 +18,13 @@ public class Utils {
 
     public double calcularVarianza(List<Muestra> muestras){
         double res = 0;
+        double sum =0;
+        double mean = calcularMedia(muestras);
+        for (Muestra m :
+                muestras) {
+            sum =+ (m.getValor()-mean)*(m.getValor()-mean);
+            res = sum/(muestras.size()-1);
+        }
         return res;
     }
 
