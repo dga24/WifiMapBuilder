@@ -100,12 +100,13 @@ public class CargarMapaAdapter extends RecyclerView.Adapter<CargarMapaAdapter.Ca
 
     public void newPreCaptura(int mapaid) {
         PreCaptura preCaptura = new PreCaptura();
+        Bundle args = new Bundle();
+        args.putString("action","comprovarMapa");
+        args.putInt("mapaid", mapaid);
+        preCaptura.setArguments(args);
         fragmentManager.beginTransaction().replace(R.id.content_main,preCaptura).commit();
         //fragmentManager.beginTransaction().add(preCaptura,"precaptura").commit();
         dialog.dismiss();
-        Bundle args = new Bundle();
-        args.putInt("mapaid", mapaid);
-        preCaptura.setArguments(args);
     }
 
     public  void setContext(Context context){

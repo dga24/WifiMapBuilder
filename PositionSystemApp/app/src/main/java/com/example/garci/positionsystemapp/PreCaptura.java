@@ -1,5 +1,6 @@
 package com.example.garci.positionsystemapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -139,21 +140,33 @@ public class PreCaptura extends Fragment {
 
         simpleScanWifi = new SimpleScanWifi(getActivity());
 
+        final boolean onStart = true;
+
 
         btnguardarCoordenadaOrigen = (Button) view.findViewById(R.id.btnguardarCoordenadaOrigen);
         tvParamPixelX = (TextView) view.findViewById(R.id.tvParamPixelX);
         tvParamPixelY = (TextView) view.findViewById(R.id.tvParamPixelY);
 
 
-        if(getArguments() != null) {    //se acaba de crear un nuevo mapa -> cargar mapa y pantalla para indicar Origen
-            int id = (getArguments().getInt("mapaid"));
-            Mapa mapaAux = ((MainActivity)getActivity()).getMapa(id);
-            changeMap(mapaAux);
-        }if(mapa!=null){
-            changeMap(mapa);
-        }else{
-            cargarMapa();
+        if(getArguments() != null) {
+            if ((getArguments().getString("action").equals("comprovarMapa"))) {//se acaba de crear/abrir un nuevo mapa -> cargar mapa y pantalla para indicar Origen
+                int id = (getArguments().getInt("mapaid"));
+                mapa = ((MainActivity) getActivity()).getMapa(id);
+                changeMap(mapa);
+            }
+            if ((getArguments().getString("action").equals("cargarMapa"))) { //abrir dialog cargarMapa
+                cargarMapa();
+            }
         }
+
+        //loadMapa();
+//        }if(mapa!=null){
+//            changeMap(mapa);
+//        }else{
+//            cargarMapa();
+//        }
+
+
 
         btnSelectPreCaptura.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,33 +322,43 @@ public class PreCaptura extends Fragment {
 //        acceptNewMap.show(getFragmentManager(),"acceptnewmapFragment");
     }
 
+    public void loadMapa(){
+
+    }
+
     public void  cargarMapa(){
-        FragmentManager fm = getFragmentManager();
-        cargarMapaDialogFragment = new CargarMapaDialogFragment();
-        cargarMapaDialogFragment.show(fm, "Sample Fragment");
-        ((MainActivity)getActivity()).getAllMaps();
+            ((MainActivity) getActivity()).cargarMapa();
+    }
+
+
+    public void newMapWithoutCoor(Mapa mapa){
+        haveCoor0=false;
+        txtX.setText(String.valueOf(0));
+        txtY.setText(String.valueOf(0));
+        txtX.setEnabled(false);
+        txtY.setEnabled(false);
+        paramPreCaptura.setVisibility(View.GONE);
+        newMapaParam.setVisibility(View.VISIBLE);
+        btnSelectPreCaptura.setVisibility(View.GONE);
+    }
+
+    public void newMapComplete(Mapa mapa){
+        haveCoor0=true;
+        paramPreCaptura.setVisibility(View.VISIBLE);
+        newMapaParam.setVisibility(View.GONE);
+        btnSelectPreCaptura.setVisibility(View.VISIBLE);
+        txtX.setEnabled(true);
+        txtY.setEnabled(true);
     }
 
     public void changeMap(Mapa mapa){
         this.mapa = mapa;
         imgMapaCaptura.setImageURI(Uri.parse(mapa.getImgMapa()));
         if(mapa.getCoordenadaid()==null){
-            haveCoor0=false;
-            txtX.setText(String.valueOf(0));
-            txtY.setText(String.valueOf(0));
-            txtX.setEnabled(false);
-            txtY.setEnabled(false);
-            paramPreCaptura.setVisibility(View.GONE);
-            newMapaParam.setVisibility(View.VISIBLE);
-            btnSelectPreCaptura.setVisibility(View.GONE);
+           newMapWithoutCoor(mapa);
         }
         else{
-            haveCoor0=true;
-            paramPreCaptura.setVisibility(View.VISIBLE);
-            newMapaParam.setVisibility(View.GONE);
-            btnSelectPreCaptura.setVisibility(View.VISIBLE);
-            txtX.setEnabled(true);
-            txtY.setEnabled(true);
+            newMapComplete(mapa);
         }
     }
 }

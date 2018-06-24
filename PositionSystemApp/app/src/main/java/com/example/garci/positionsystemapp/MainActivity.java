@@ -12,8 +12,8 @@ import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +38,6 @@ import com.example.garci.positionsystemapp.dataBase.Entities.Mapa;
 import com.example.garci.positionsystemapp.dataBase.Entities.Medida;
 import com.example.garci.positionsystemapp.dataBase.Entities.Muestra;
 import com.example.garci.positionsystemapp.model.APSignalStatistics;
-import com.example.garci.positionsystemapp.model.BSSignalStatistics;
 import com.example.garci.positionsystemapp.model.ITask;
 import com.example.garci.positionsystemapp.model.Manager;
 import com.example.garci.positionsystemapp.model.MuestraCapturada;
@@ -166,6 +165,10 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        boolean isHome = false;
+        boolean isPreCaptura = false;
+        boolean isHeatMap = false;
+        boolean isGestor = false;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -174,23 +177,50 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.capturaDatos) {
             fragment = mPreCaptura = new PreCaptura();
+            isPreCaptura = true;
+            isHeatMap = false;
+            isGestor = false;
             fragmentTransaction=true;
+            isHome = false;
 
         } else if (id == R.id.home) {
             fragment = mPreCaptura = new PreCaptura();
+            isPreCaptura = true;
+            isHeatMap = false;
+            isGestor = false;
             fragmentTransaction=true;
+            isHome = true;
 
         } else if (id == R.id.heatMap) {
             fragment = mHeatMap= new HeatMap();
+            isPreCaptura = false;
+            isHeatMap = true;
+            isGestor = false;
             fragmentTransaction=true;
+            isHome = false;
 
         } else if (id == R.id.gestorDatos) {
             fragment = mGestionChooser = new GestionChooser();
+            isPreCaptura = false;
+            isHeatMap = false;
+            isGestor = true;
             fragmentTransaction = true;
+            isHome = false;
 
         }
         if(fragmentTransaction){
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+            if(isPreCaptura){
+                Bundle args = new Bundle();
+                args.putString("action", "cargarMapa");
+                mPreCaptura.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mPreCaptura).commit();
+            }if(isHeatMap){
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mHeatMap).commit();
+            }
+            if(isGestor){
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mGestionChooser).commit();
+            }
             item.setChecked(true);
             getSupportActionBar().setTitle(item.getTitle());
         }
@@ -274,7 +304,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void createMapa(String nombre, String edificio, String planta, Uri img){
-        Mapa mapa = new Mapa(nombre,edificio, Integer.parseInt(planta),img.getPath(),-1);
+        Mapa mapa = new Mapa(nombre,edificio, Integer.parseInt(planta),img.getPath(),null);
         System.out.print("datosrecibidos");
         db.mapadao().createMapa(mapa);
     }
@@ -332,7 +362,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void saveMap(final Mapa mapa){
+    public void saveMap(final Mapa mapa){       //guardar Mapa, preCaptura para crearCoordenada
         manager = new Manager(this);
         manager.createMap(mapa, db, new OnFinishListener() {
             @Override
@@ -340,29 +370,44 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(context, "Guardado mapa ", Toast.LENGTH_SHORT);
                 toast.show();
                 mapa.setMapaid((int) manager.getLastMapid(db));
-                mPreCaptura.changeMap(mapa);
+                PreCaptura mPreCaptura = new PreCaptura();
+                Bundle args = new Bundle();
+                args.putString("action","comprovarMapa");
+                args.putInt("mapaid",mapa.getMapaid());
+                mPreCaptura.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mPreCaptura).commit();
+                //mPreCaptura.newMapWithoutCoor(mapa);
             }
         });
     }
 
     public void createCoorOrigen(final Mapa mapa, final Coordenada coordenada){
-        manager = new Manager(this);
         manager.setCoorOrigen(mapa, coordenada, db, new OnFinishListener() {
             @Override
             public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
                 Toast toast = Toast.makeText(context, "Guardado coordenada Origen ", Toast.LENGTH_SHORT);
                 toast.show();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main,new PreCaptura()).commit();
+                PreCaptura mPreCaptura = new PreCaptura();
+                Bundle args = new Bundle();
+                args.putString("action","comprovarMapa");
+                args.putInt("mapaid",mapa.getMapaid());
+                mPreCaptura.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, mPreCaptura).commit();
+                //mPreCaptura.newMapComplete(mapa);
+
             }
         });
     }
 
-    public void getAllMaps(){
+    public void cargarMapa(){
+        FragmentManager fm = getSupportFragmentManager();
+        final CargarMapaDialogFragment cargarMapaDialogFragment = new CargarMapaDialogFragment();
+        cargarMapaDialogFragment.show(fm, "Sample Fragment");
         final List<Mapa> mapas = new ArrayList<>();
         manager.getAllMapas(db,mapas, new OnFinishListener() {
             @Override
             public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
-                mPreCaptura.cargarMapaDialogFragment.inicializarAdaptador(mapas,context,getSupportFragmentManager());
+                cargarMapaDialogFragment.inicializarAdaptador(mapas,context,getSupportFragmentManager());
             }
         });
     }
