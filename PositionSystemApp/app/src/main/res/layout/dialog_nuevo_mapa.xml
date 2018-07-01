@@ -6,6 +6,7 @@
     android:id="@+id/nuevoMapa"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo"
     tools:context=".NuevoMapaDialogFragment">
 
     <TextView
@@ -87,43 +88,4 @@
         app:layout_constraintEnd_toEndOf="@+id/editPlantaMapa"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPlantaMapa" />
-
-    <ImageView
-        android:id="@+id/imgNuevaCaptura"
-        android:layout_width="match_parent"
-        android:layout_height="278dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPlantaMapa" />
-
-    <Button
-        android:id="@+id/btnGuardarMapa"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Guardar"
-        android:theme="@style/MyBtnAceptar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgNuevaCaptura" />
-
-    <Button
-        android:id="@+id/btnCancelarMapa"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/param_cancelar"
-        android:theme="@style/MyBtnCancelar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgNuevaCaptura" />
 </android.support.constraint.ConstraintLayout>

@@ -6,19 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
             android:id="@+id/capturaDatos"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_leak_add"
             android:title="Capturar datos" />
         <item
             android:id="@+id/heatMap"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Heat Map" />
+            android:icon="@drawable/ic_layers"
+            android:title="HeatMap" />
         <item
             android:id="@+id/gestorDatos"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_action_database"
             android:title="Gestor de datos" />
     </group>
 

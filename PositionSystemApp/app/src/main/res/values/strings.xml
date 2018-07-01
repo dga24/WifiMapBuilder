@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PositionSystemApp</string>
+    <string name="app_name">WifiMapBuilder</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -27,4 +27,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="guardar">Guardar</string>
     <string name="tvSeleccionarOrigen">Seleccione punto Origen</string>
+    <string name="appName">WifiMapBuilder</string>
+    <string name="Appsubtitle">David García Álvarez - UPC</string>
 </resources>
