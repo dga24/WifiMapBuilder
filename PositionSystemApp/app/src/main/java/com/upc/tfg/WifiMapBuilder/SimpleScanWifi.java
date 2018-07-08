@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class SimpleScanWifi extends AsyncTask<Void, Void, String> {
     Context context;
     Activity activity;
     ProgressDialog pDialog;
+    Button button;
 
     public SimpleScanWifi(Activity activity) {
         this.context = activity;

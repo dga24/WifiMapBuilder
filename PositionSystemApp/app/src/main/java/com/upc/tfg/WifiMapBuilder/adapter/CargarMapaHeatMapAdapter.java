@@ -100,6 +100,7 @@ public class CargarMapaHeatMapAdapter extends RecyclerView.Adapter<CargarMapaHea
     }
 
     public void newHeatMap(int mapaid) {
+        dialog.dismiss();
         HeatMap heatMap = new HeatMap();
         Bundle args = new Bundle();
         args.putString("action","comprovarMapa");
@@ -107,7 +108,6 @@ public class CargarMapaHeatMapAdapter extends RecyclerView.Adapter<CargarMapaHea
         heatMap.setArguments(args);
         fragmentManager.beginTransaction().replace(R.id.content_main,heatMap).commit();
         //fragmentManager.beginTransaction().add(preCaptura,"precaptura").commit();
-        dialog.dismiss();
     }
 
     public  void setContext(Context context){

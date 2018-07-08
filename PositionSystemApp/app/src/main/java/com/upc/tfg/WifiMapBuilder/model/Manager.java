@@ -98,6 +98,59 @@ public class Manager {
         myAsynctask.execute();
     }
 
+    public void getAllCoordenadasInMap(final int mapaid, final List<Coordenada> coordenadas, final AppRoomDatabase db, OnFinishListener listener){
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
+
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
+            }
+
+            @Override
+            public int run() {
+                coordenadas.addAll(db.coordenadaDao().getAllMedidasInMapa(mapaid));
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return "Obteniendo puntos de mapa";
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+    }
+
+    public  void getMedidasInCoordenada(final int coordenadaid, final List<Medida> medidas, final  AppRoomDatabase db, OnFinishListener listener){
+        MyAsyncTask myAsyncTask = new MyAsyncTask(context);
+        myAsyncTask.addTask(new ITask() {
+            @Override
+            public int weight() {
+                return 100;
+            }
+
+            @Override
+            public int run() {
+                Coordenada coor = db.coordenadaDao().getCoordenada(coordenadaid);
+                List<Integer> ids = db.coordenadaDao().getAllIdsInPoint(coor.getX(), coor.getY(), coor.getZ(),coor.getMapaid());
+                int i = 0;
+                while(i<ids.size()){
+                    medidas.addAll(db.medidaDao().getMedidasByPosicionId(ids.get(i)));
+                    i++;
+                }
+                return 0;
+            }
+
+            @Override
+            public String description() {
+                return null;
+            }
+        });
+        myAsyncTask.addOnFinishListener(listener);
+        myAsyncTask.execute();
+    }
+
     public void getMuestrasByMedidaId(final int medidaID, final List<APSignalStatistics> apSignalStatistics,
                                       final QualityCalculator qualityCalculator, final AppRoomDatabase db, OnFinishListener listener) {
 
@@ -173,7 +226,7 @@ public class Manager {
 
             @Override
             public String description() {
-                return "saving map...";
+                return "Obteniendo datos...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);
@@ -199,7 +252,7 @@ public class Manager {
 
             @Override
             public String description() {
-                return "saving map...";
+                return "Obteniendo mapas...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);
@@ -225,7 +278,7 @@ public class Manager {
 
             @Override
             public String description() {
-                return "saving map...";
+                return "Creando mapa...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);
@@ -258,7 +311,7 @@ public class Manager {
 
             @Override
             public String description() {
-                return "saving map...";
+                return "Cargando datos...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);
@@ -286,7 +339,7 @@ public class Manager {
 
             @Override
             public String description() {
-                return "saving CoordenadaOrigen...";
+                return "Guardando Coordenada Origen...";
             }
         });
         myAsyncTask.addOnFinishListener(listener);

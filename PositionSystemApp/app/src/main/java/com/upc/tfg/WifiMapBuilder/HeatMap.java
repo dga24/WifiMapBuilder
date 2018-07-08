@@ -12,18 +12,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
+import com.upc.tfg.WifiMapBuilder.adapter.MedidaAdapter;
+import com.upc.tfg.WifiMapBuilder.adapter.PointsAdapter;
 import com.upc.tfg.WifiMapBuilder.adapter.SeñalAdapter;
+import com.upc.tfg.WifiMapBuilder.dataBase.Entities.Coordenada;
 import com.upc.tfg.WifiMapBuilder.dataBase.Entities.Mapa;
+import com.upc.tfg.WifiMapBuilder.dataBase.Entities.Medida;
 import com.upc.tfg.WifiMapBuilder.model.APSignalStatistics;
 import com.upc.tfg.WifiMapBuilder.model.PointCoverage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 /**
@@ -38,18 +44,19 @@ public class HeatMap extends Fragment {
     private RecyclerView recyclerListaSignals;
     private SeñalAdapter adaptador;
     private ImageView imgMapaCapturahm;
-
     private Button btnQualityViewer;
     private Button btnCoverageviewr;
-
+    List<Medida> medidas;
+    List<String> coordenadasString;
+    private List<Coordenada> coordenadas;
+    private PointsAdapter pointsAdapter;
+    private MedidaAdapter medidaAdapter;
+    RecyclerView recyclerListaMedidas;
+    private Spinner spPuntos;
     private ca.hss.heatmaplib.HeatMap heatMapImg;
-
     private OnFragmentInteractionListener mListener;
-
     Drawable drawable;
-
     private Mapa mapa;
-
     public HeatMap() {
         // Required empty public constructor
     }
@@ -62,12 +69,13 @@ public class HeatMap extends Fragment {
         View view = inflater.inflate(R.layout.fragment_heatmap, container, false);
 
         signals = new ArrayList<>();
-        recyclerListaSignals = (RecyclerView) view.findViewById(R.id.rvLista);
-        recyclerListaSignals.setLayoutManager(new LinearLayoutManager(getContext()));
         imgMapaCapturahm = (ImageView) view.findViewById(R.id.imgMapaCapturahm);
         btnQualityViewer = (Button) view.findViewById(R.id.btnQualityViewer);
         btnCoverageviewr = (Button)view.findViewById(R.id.btnCoverageviewr);
         heatMapImg = (ca.hss.heatmaplib.HeatMap) view.findViewById(R.id.heatmapImg);
+        spPuntos = (Spinner) view.findViewById(R.id.spinnerCoordenadas);
+        recyclerListaMedidas = (RecyclerView) view.findViewById(R.id.rvListaMedidas);
+        recyclerListaMedidas.setLayoutManager(new LinearLayoutManager(getContext()));
 
         heatMapImg.setMinimum(10);
         heatMapImg.setMaximum(100.0);
@@ -80,17 +88,17 @@ public class HeatMap extends Fragment {
             colors.put(stop, color);
         }
         heatMapImg.setColorStops(colors);
+        spPuntos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                showMedidasByCoordenadaId(coordenadas.get(position).getCoordenadaid());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-//        Random rand = new Random();
-//        for (int i = 0; i < 20; i++) {
-//            float x =rand.nextFloat();
-//            float y =rand.nextFloat();
-//            ca.hss.heatmaplib.HeatMap.DataPoint point = new  ca.hss.heatmaplib.HeatMap.DataPoint(x, y, rand.nextDouble() * 100.0);
-//            heatMapImg.addData(point);
-//        }
-
-
+            }
+        });
         btnCoverageviewr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +124,17 @@ public class HeatMap extends Fragment {
             }
         }
 
-//        data();
-//        inicializarAdaptador();
+        spPuntos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                showMedidasByCoordenadaId(coordenadas.get(position).getCoordenadaid());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return view;
     }
 
@@ -128,6 +145,7 @@ public class HeatMap extends Fragment {
         heatMapImg.getHeight();
         //heatMapImg.setLayoutParams(new ViewGroup.LayoutParams(imgMapaCapturahm.getLayoutParams()));
         drawable = imgMapaCapturahm.getDrawable();
+        ((MainActivity)getActivity()).getAllcoordenadasInMapa(mapa.getMapaid());
     }
 
     public void cargarMapa(){
@@ -158,12 +176,6 @@ public class HeatMap extends Fragment {
         }
     }
 
-    public void inicializarAdaptador(){
-
-        adaptador = new SeñalAdapter(signals);
-        recyclerListaSignals.setAdapter(adaptador);
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -188,16 +200,6 @@ public class HeatMap extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -224,5 +226,59 @@ public class HeatMap extends Fragment {
 
     private static float interpolate(float a, float b, float proportion) {
         return (a + ((b - a) * proportion));
+    }
+
+
+    public void showPointList(List<Coordenada> coordenadas){
+        coordenadas = discartCoordenadas(coordenadas);
+        this.coordenadas = coordenadas;
+        coordenadasString = new ArrayList<>();
+        for (Coordenada coor :
+                coordenadas) {
+            coordenadasString.add(coor.toString());
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, coordenadasString);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spPuntos.setAdapter(dataAdapter);
+    }
+
+    public void showMeasures(List<Medida> medidas){
+        this.medidas = medidas;
+
+    }
+
+    public void showMedidasByCoordenadaId(int coorId){
+        ((MainActivity)getActivity()).getMedidasByCoordenadaId(coorId);
+    }
+
+    public void showMedidasInPoint(List<Medida> medidas){
+        this.medidas = medidas;
+        medidaAdapter = new MedidaAdapter(medidas,getActivity());
+        recyclerListaMedidas.setAdapter(medidaAdapter);
+    }
+
+    private List<Coordenada> discartCoordenadas(List<Coordenada> coordenadas){
+        int i=0;
+        List<Coordenada> coorsf = new ArrayList<>();
+        coorsf.add(coordenadas.get(0));
+        boolean in = false;
+        while (i<coordenadas.size()){
+            Coordenada coor = coordenadas.get(i);
+            int a=0;
+            while (a<coorsf.size()){
+                Coordenada aux = coorsf.get(a);
+                    if ((aux.getX() == coor.getX()
+                            && aux.getY() == coor.getY()
+                            && aux.getZ() == coor.getZ())
+                            ) {
+                        in = true;
+                    }
+                a++;
+            }
+            if (!in)coorsf.add(coor);
+            in = false;
+            i++;
+        }
+        return coorsf;
     }
 }

@@ -25,4 +25,10 @@ public interface CoordenadaDao {
 
     @Query("Select * FROM coordenada")
     List<Coordenada> getAllCoordenadas();
+
+    @Query("Select * FROM coordenada WHERE mapaid =:mapaid")
+    List<Coordenada> getAllMedidasInMapa(int mapaid);
+
+    @Query("SELECT coordenadaid FROM coordenada WHERE x=:x AND y=:y AND z=:z AND mapaid=:mapaid ")
+    List<Integer> getAllIdsInPoint(double x, double y, double z, int mapaid);
 }

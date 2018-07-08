@@ -84,4 +84,8 @@ public class Coordenada {
         this.pixely = pixely;
     }
 
+    public String toString(){
+        return "("+x+","+y+","+z+")";
+    }
+
 }

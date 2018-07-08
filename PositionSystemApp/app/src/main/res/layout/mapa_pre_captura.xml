@@ -1,11 +1,21 @@
-<android.support.constraint.ConstraintLayout
+<LinearLayout
+    android:id="@+id/cll"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/darkGrey">
+    android:background="@color/darkGrey"
+    android:orientation="vertical"
+    android:weightSum="7">
 
+
+<android.support.constraint.ConstraintLayout
+    android:id="@+id/upcll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="6"
+    android:layout_alignParentTop="true">
 
     <ImageView
         android:id="@+id/imgMapaCaptura"
@@ -17,10 +27,21 @@
         android:layout_marginTop="8dp"
         android:scaleType="fitCenter"
         android:src="@drawable/mapabn"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></android.support.design.widget.CoordinatorLayout>
 
 
     <ImageButton
@@ -52,6 +73,7 @@
         android:text="pixelY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPixelX" />
+</android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -59,7 +81,9 @@
         android:layout_height="50dp"
         android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_below="@id/upcll"
+        android:layout_weight="1">
 
         <EditText
             android:id="@+id/editX"
@@ -135,5 +159,5 @@
     </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
 

@@ -17,7 +17,7 @@ public class Utils {
                 muestras) {
             sum = sum + muestra.getValor();
         }
-        return sum/muestras.size();
+        return Math.round((sum/muestras.size())*100)/100;
     }
 
     public double calcularVarianza(List<Muestra> muestras){
@@ -29,7 +29,7 @@ public class Utils {
             sum =+ (m.getValor()-mean)*(m.getValor()-mean);
             res = sum/(muestras.size()-1);
         }
-        return res;
+        return Math.round(res*100)/100;
     }
 
     public double computeQuality(QualityCalculator qualityCalculator, List<Muestra> samples, long totalSamples) {

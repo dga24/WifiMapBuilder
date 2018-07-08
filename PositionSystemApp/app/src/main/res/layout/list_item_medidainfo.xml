@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/Black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_perm_scan_wifi" />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Angulo:"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMedAng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="90"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/txtDataIni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:text="Fecha:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/tvDataIni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="7/5/2018,15:33"
+        app:layout_constraintStart_toEndOf="@+id/txtDataIni"
+        app:layout_constraintTop_toTopOf="@+id/txtDataIni" />
+
+
+    <TextView
+        android:id="@+id/txtMedPeriodo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Periodo:"
+        app:layout_constraintStart_toEndOf="@+id/tvDataIni"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMedPeriodo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="100"
+        app:layout_constraintStart_toEndOf="@+id/txtMedPeriodo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtMedRep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Repeticiones:"
+        app:layout_constraintStart_toEndOf="@+id/tvDataIni"
+        app:layout_constraintTop_toBottomOf="@+id/txtMedPeriodo" />
+
+    <TextView
+        android:id="@+id/tvMedRep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="4"
+        app:layout_constraintStart_toEndOf="@+id/txtMedRep"
+        app:layout_constraintTop_toBottomOf="@+id/tvMedPeriodo" />
+
+    <TextView
+        android:id="@+id/txtMedNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Num muestras:"
+        app:layout_constraintStart_toEndOf="@+id/tvDataIni"
+        app:layout_constraintTop_toBottomOf="@+id/txtMedRep" />
+
+    <TextView
+        android:id="@+id/tvMedNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="5"
+        app:layout_constraintStart_toEndOf="@+id/txtMedNum"
+        app:layout_constraintTop_toBottomOf="@+id/tvMedRep" />
+
+    <TextView
+        android:id="@+id/txtMedTiempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Tiempo entre muestras:"
+        app:layout_constraintStart_toEndOf="@+id/tvDataIni"
+        app:layout_constraintTop_toBottomOf="@+id/txtMedNum" />
+
+    <TextView
+        android:id="@+id/tvMedTiempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="5"
+        app:layout_constraintStart_toEndOf="@+id/txtMedTiempo"
+        app:layout_constraintTop_toBottomOf="@+id/tvMedNum" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/tvMedTiempo"/>
+
+
+
+
+</android.support.constraint.ConstraintLayout>

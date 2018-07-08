@@ -148,7 +148,7 @@ public class WifiScan extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-            pd.setMessage("Wifi scan [" + progress[0] + "/" + progress[1] + "]\nRepetition=: "+progress[2]+"\n");
+            pd.setMessage("Wifi scan [" + progress[0] + "/" + progress[1] + "]\nRepeticion: "+progress[2]+"\n");
         }
 
         @Override

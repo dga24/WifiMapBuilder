@@ -26,6 +26,7 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,14 +105,16 @@ public class MainActivity extends AppCompatActivity
         permissionRequest();
         this.context = this;
 
-        btnRefresh = (ImageButton) findViewById(R.id.btnRefreshWifi);
-        txtWifi = (TextView) findViewById(R.id.txtWifi);
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SimpleScanWifi simpleScanWifi= new SimpleScanWifi((Activity) context);
-            }
-        });
+//        btnRefresh = (ImageButton) findViewById(R.id.btnRefreshWifi);
+//        txtWifi = (TextView) findViewById(R.id.txtWifi);
+//        btnRefresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                SimpleScanWifi simpleScanWifi= new SimpleScanWifi((Activity) context);
+//            }
+//        });
+
+
 
 
         manager = new Manager(this);
@@ -119,6 +122,12 @@ public class MainActivity extends AppCompatActivity
         Log.d("fin:    ","ya ne mainactivity.....");
         db = AppRoomDatabase.getAppDatabase(this);
         //System.out.print(db.estacionBaseDao().getEstacionBase(1).getTipo().toString());
+
+        mPreCaptura = new PreCaptura();
+        Bundle args = new Bundle();
+        args.putString("action", "cargarMapa");
+        mPreCaptura.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main,mPreCaptura).commit();
 
 
 
@@ -185,13 +194,13 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction=true;
             isHome = false;
 
-        } else if (id == R.id.home) {
-            fragment = mPreCaptura = new PreCaptura();
-            isPreCaptura = true;
-            isHeatMap = false;
-            isGestor = false;
-            fragmentTransaction=true;
-            isHome = true;
+//        } else if (id == R.id.home) {
+//            fragment = mPreCaptura = new PreCaptura();
+//            isPreCaptura = true;
+//            isHeatMap = false;
+//            isGestor = false;
+//            fragmentTransaction=true;
+//            isHome = true;
 
         } else if (id == R.id.heatMap) {
             fragment = mHeatMap= new HeatMap();
@@ -358,6 +367,20 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void showDetailsMedida(final int medidaid){
+        final List<APSignalStatistics> bsSignalStatistics = new ArrayList<>();
+        final QualityCalculatorByRSSThreshold qualityCalculator = new QualityCalculatorByRSSThreshold();
+        final ResultsDialogFragment resultsDialogFragment = new ResultsDialogFragment();
+        final FragmentManager fm = getSupportFragmentManager();
+        resultsDialogFragment.show(fm,"resultDialog");
+        manager.getMuestrasByMedidaId(medidaid, bsSignalStatistics, qualityCalculator, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+                resultsDialogFragment.inicializarAdaptador(bsSignalStatistics);
+            }
+        });
+    }
+
     public void saveMap(final Mapa mapa){       //guardar Mapa, preCaptura para crearCoordenada
         manager = new Manager(this);
         manager.createMap(mapa, db, new OnFinishListener() {
@@ -438,6 +461,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    public void getAllcoordenadasInMapa(final int mapaid){
+        final List<Coordenada> coordenadas =  new ArrayList<>();
+        manager.getAllCoordenadasInMap(mapaid, coordenadas, db, new OnFinishListener() {
+            @Override
+            public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+//                    List<Fragment> ff = getSupportFragmentManager().getFragments();
+                HeatMap mHeatMap = (HeatMap) getSupportFragmentManager().getFragments().get(0);
+                mHeatMap.showPointList(coordenadas);
+            }
+        });
+    }
+
+    public void getMedidasByCoordenadaId(final int coorId){
+     final List<Medida> medidas = new ArrayList<>();
+     manager.getMedidasInCoordenada(coorId, medidas, db, new OnFinishListener() {
+         @Override
+         public void onFinsh(List<Pair<ITask, Integer>> tasksThatFailed) {
+             HeatMap mHeatMap = (HeatMap) getSupportFragmentManager().getFragments().get(0);
+             mHeatMap.showMedidasInPoint(medidas);
+         }
+     });
     }
 
 }

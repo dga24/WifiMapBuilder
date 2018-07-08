@@ -1,41 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:elevation="2dp"
-android:background="@color/darkGrey"
-xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-<ImageView
-    android:id="@+id/imgMapaCapturahm"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:scaleType="fitCenter"
-    android:src="@drawable/mapabn"
-    app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="2dp"
+    android:background="@color/darkGrey"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:weightSum="7">
 
-    <ca.hss.heatmaplib.HeatMap
-        android:id="@+id/heatmapImg"
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:blur="0.01"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxOpacity="255"
-        app:minOpacity="0" />
+        android:layout_weight="6"
+        android:layout_alignParentTop="true">
 
+        <ImageView
+            android:id="@+id/imgMapaCapturahm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mapabn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ca.hss.heatmaplib.HeatMap
+            android:id="@+id/heatmapImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:blur="0.01"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxOpacity="255"
+            app:minOpacity="0" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 <android.support.constraint.ConstraintLayout
@@ -44,7 +55,9 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_height="50dp"
     android:background="@color/grey"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_below="@id/constraintLay"
+    android:layout_weight="1">
 
 
     <Button
@@ -69,70 +82,16 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-        <EditText
-            android:id="@+id/editXhm"
-            android:layout_width="@dimen/editTxtCoordenadaWidth"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryLight"
-            android:text="0"
-            android:hint="X"
-            android:inputType="numberDecimal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editYhm"
-            android:layout_width="@dimen/editTxtCoordenadaWidth"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryLight"
-            android:text="0"
-            android:hint="Y"
-            android:inputType="numberDecimal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editXhm"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editZhm"
-            android:layout_width="@dimen/editTxtCoordenadaWidth"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryLight"
-            android:text="1.6"
-            android:hint="Z"
-            android:inputType="numberDecimal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editYhm"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <EditText
-            android:id="@+id/editAnghm"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryLight"
-            android:inputType="numberDecimal"
-            android:text="90"
-            android:hint="0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editZhm"
-            app:layout_constraintTop_toTopOf="parent" />
+        <Spinner
+            android:id="@+id/spinnerCoordenadas"
+            android:layout_width="200dp"
+            android:tooltipText="Coordenadas disponibles"
+            android:layout_height="match_parent"
+            ></Spinner>
 
 
 </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
 

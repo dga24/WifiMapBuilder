@@ -1,26 +1,33 @@
 package com.upc.tfg.WifiMapBuilder;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upc.tfg.WifiMapBuilder.dataBase.AppRoomDatabase;
@@ -33,6 +40,7 @@ import com.upc.tfg.WifiMapBuilder.model.Parameters;
 
 import java.util.Date;
 
+import static android.content.ContentValues.TAG;
 import static android.graphics.Paint.Style.STROKE;
 
 
@@ -82,8 +90,9 @@ public class PreCaptura extends Fragment {
     SimpleScanWifi simpleScanWifi;
 
     Canvas canvas;
-
-    Paint paint;
+    Bitmap mBitmap;
+    Paint mPaint;
+    Point mPoint;
 
     boolean haveCoor0 = true;
 
@@ -96,6 +105,9 @@ public class PreCaptura extends Fragment {
     TextView tvParamPixelX;
     TextView tvParamPixelY;
     Button btnguardarCoordenadaOrigen;
+    boolean changepoint;
+
+    CoordinatorLayout cll;
 
     Medida medida;
 
@@ -120,33 +132,31 @@ public class PreCaptura extends Fragment {
         txtAng = (EditText) view.findViewById(R.id.editAng);
         imgMapaCaptura = (ImageView) view.findViewById(R.id.imgMapaCaptura);
         btnSelectPreCaptura = (Button) view.findViewById(R.id.btnSelectPreCaptura);
-
         tvPixelX = (TextView) view.findViewById(R.id.tvPixelX);
         tvPixelY = (TextView) view.findViewById(R.id.tvPixelY);
-
         editMuestras = (EditText) view.findViewById(R.id.editMuestras);
         editPeriodo = (EditText) view.findViewById(R.id.editPeriodo);
         editRepeticiones = (EditText) view.findViewById(R.id.editRepeticiones);
         editTiempo = (EditText) view.findViewById(R.id.editTiempo);
         btnStartCaptura = (Button) view.findViewById(R.id.btnStartCaptura);
         btnStartCaptura.setEnabled(false);
-
         tvWifiScan = (TextView) view.findViewById(R.id.tvWifiScan);
         btnRefreshScan = (Button) view.findViewById(R.id.btnRefreshScan);
-
         newMapaParam = (ConstraintLayout) view.findViewById(R.id.newMapaParam);
         paramPreCaptura = (ConstraintLayout) view.findViewById(R.id.contentParam);
-
         refreshMap = (ImageButton) view.findViewById(R.id.btnRefreshImagen);
-
-        simpleScanWifi = new SimpleScanWifi(getActivity());
-
         final boolean onStart = true;
-
-
         btnguardarCoordenadaOrigen = (Button) view.findViewById(R.id.btnguardarCoordenadaOrigen);
         tvParamPixelX = (TextView) view.findViewById(R.id.tvParamPixelX);
         tvParamPixelY = (TextView) view.findViewById(R.id.tvParamPixelY);
+        changepoint = false;
+
+
+
+        cll = (CoordinatorLayout) view.findViewById(R.id.rll);
+
+
+
 
 
         if(getArguments() != null) {
@@ -159,14 +169,6 @@ public class PreCaptura extends Fragment {
                 cargarMapa();
             }
         }
-
-        //loadMapa();
-//        }if(mapa!=null){
-//            changeMap(mapa);
-//        }else{
-//            cargarMapa();
-//        }
-
 
 
         btnSelectPreCaptura.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +201,7 @@ public class PreCaptura extends Fragment {
         btnRefreshScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                simpleScanWifi = new SimpleScanWifi(getActivity());
                 simpleScanWifi.execute();
             }
         });
@@ -209,16 +212,10 @@ public class PreCaptura extends Fragment {
                 cargarMapa();
             }
         });
-        paint = new Paint(paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLUE);
-        paint.setStrokeWidth(15);
-        paint.setStyle(Paint.Style.FILL);
+
+        initializePaint();
 
 
-
-        final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
-        Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        canvas = new Canvas(mutableBitmap);
 
         btnStartCaptura.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,38 +231,27 @@ public class PreCaptura extends Fragment {
             public boolean onTouch(View v, MotionEvent event){
                 switch (event.getAction()){
                     case MotionEvent.ACTION_UP:
-                        pixelX = (int)event.getRawX();
-                        pixelY = (int)event.getRawY();
+                        if(changepoint){
+                            cll.removeViewAt(0);
+                        }
+                        pixelX = (int)event.getX();
+                        pixelY = (int)event.getY();
                         //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
                         tvPixelX.setText(String.valueOf(pixelX));
                         tvPixelY.setText(String.valueOf(pixelY));
                         tvParamPixelX.setText(String.valueOf(pixelX));
                         tvParamPixelY.setText(String.valueOf(pixelY));
-                        canvas.drawBitmap(bitmap, 0, 0, paint);
-                        canvas.drawCircle(pixelX, pixelY,100, paint);
+                        mPoint = new Point((int) event.getX(), (int) event.getY());
+                        MyView myView = new MyView(getActivity(),pixelX,pixelY);
+                        int gh = myView.getHeight();
+                        int gw = myView.getWidth();
+                        cll.addView(myView);
+                        changepoint=true;
+
                 }
                 return true;
             }
         });
-
-
-
-//        imgMapaCaptura.setOnTouchListener(new View.OnTouchListener(){
-//            final Bitmap bitmap = ((BitmapDrawable)imgMapaCaptura.getDrawable()).getBitmap();
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event){
-//                pixelX = (int)event.getRawX();
-//                pixelY = (int)event.getRawY();
-//                //int pixel = bitmap.getPixel((int)event.getX(),(int)event.getY());
-//                tvPixelX.setText(String.valueOf(pixelX));
-//                tvPixelY.setText(String.valueOf(pixelY));
-//                tvParamPixelX.setText(String.valueOf(pixelX));
-//                tvParamPixelY.setText(String.valueOf(pixelY));
-//                canvas.drawBitmap(bitmap, 0, 0, paint);
-//                canvas.drawCircle(pixelX, pixelY,100, paint);
-//                return true;
-//            }
-//        });
 
         btnguardarCoordenadaOrigen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,6 +263,8 @@ public class PreCaptura extends Fragment {
 
         return  view;
     }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -292,6 +280,7 @@ public class PreCaptura extends Fragment {
     public void updateMap(Uri uri){
         imgMapaCaptura.setImageURI(uri);
     }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -312,24 +301,11 @@ public class PreCaptura extends Fragment {
         acceptNewMap = new AcceptNewMap();
         acceptNewMap.setMapa(mapa);
         acceptNewMap.show(getActivity().getSupportFragmentManager(),"Fdialog");
-//        Bundle args= new Bundle();
-//        args.putString("name", mapa.getNombre());
-//        args.putString("building", mapa.getEdificio());
-//        args.putInt("floor", mapa.getPlanta());
-//        args.putString("imgUriString", mapa.getImgMapa().toString());
-//        acceptNewMap.setArguments(args);
-
-//        acceptNewMap.show(getFragmentManager(),"acceptnewmapFragment");
-    }
-
-    public void loadMapa(){
-
     }
 
     public void  cargarMapa(){
             ((MainActivity) getActivity()).cargarMapa();
     }
-
 
     public void newMapWithoutCoor(Mapa mapa){
         haveCoor0=false;
@@ -361,4 +337,16 @@ public class PreCaptura extends Fragment {
             newMapComplete(mapa);
         }
     }
+
+    public void initializePaint(){
+        mPaint = new Paint();
+        mPaint.setColor(Color.RED);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setStrokeWidth(5);
+    }
+
 }
+
+
